@@ -1,0 +1,74 @@
+@use './variables' as vars;
+
+@mixin touch-target {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+@mixin truncate-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@mixin truncate-multiline($lines) {
+  display: -webkit-box;
+  -webkit-line-clamp: $lines;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin card-base {
+  background-color: vars.$surface;
+  border-radius: vars.$radius-md;
+  border: 1px solid vars.$border;
+  padding: vars.$space-lg;
+}
+
+@mixin scrollbar-hidden {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@mixin safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+@mixin input-base {
+  width: 100%;
+  background-color: vars.$surface-elevated;
+  border: 1px solid vars.$border;
+  border-radius: vars.$radius-md;
+  padding: vars.$space-md vars.$space-lg;
+  font-size: 16px; // Prevent zoom on mobile
+  color: vars.$text-primary;
+  transition: border-color vars.$transition-fast, box-shadow vars.$transition-fast;
+
+  &::placeholder {
+    color: vars.$text-secondary;
+  }
+  
+  &:focus {
+    outline: none;
+    border-color: vars.$primary;
+    box-shadow: vars.$shadow-glow;
+  }
+}

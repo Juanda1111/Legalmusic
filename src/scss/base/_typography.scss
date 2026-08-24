@@ -1,0 +1,51 @@
+@use '../abstracts/variables' as vars;
+
+// Headings
+h1, .h1 {
+  font-size: vars.$font-3xl;
+  font-weight: vars.$weight-bold;
+  line-height: 1.2;
+}
+
+h2, .h2 {
+  font-size: vars.$font-2xl;
+  font-weight: vars.$weight-bold;
+  line-height: 1.3;
+}
+
+h3, .h3 {
+  font-size: vars.$font-xl;
+  font-weight: vars.$weight-semibold;
+  line-height: 1.4;
+}
+
+h4, .h4 {
+  font-size: vars.$font-lg;
+  font-weight: vars.$weight-semibold;
+  line-height: 1.4;
+}
+
+// Utility Sizes
+.text-xs { font-size: vars.$font-xs; }
+.text-sm { font-size: vars.$font-sm; }
+.text-base { font-size: vars.$font-base; }
+.text-lg { font-size: vars.$font-lg; }
+.text-xl { font-size: vars.$font-xl; }
+.text-2xl { font-size: vars.$font-2xl; }
+.text-3xl { font-size: vars.$font-3xl; }
+
+// Utility Colors
+.text-primary { color: vars.$text-primary; }
+.text-secondary { color: vars.$text-secondary; }
+.text-success { color: vars.$success; }
+.text-warning { color: vars.$warning; }
+.text-danger { color: vars.$danger; }
+.text-accent { color: vars.$primary; }
+
+// Utility Weights
+.font-light { font-weight: vars.$weight-light; }
+.font-regular { font-weight: vars.$weight-regular; }
+.font-medium { font-weight: vars.$weight-medium; }
+.font-semibold { font-weight: vars.$weight-semibold; }
+.font-bold { font-weight: vars.$weight-bold; }
+.font-extrabold { font-weight: vars.$weight-extrabold; }
