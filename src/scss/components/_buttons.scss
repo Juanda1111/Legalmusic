@@ -1,0 +1,89 @@
+@use '../abstracts/variables' as vars;
+@use '../abstracts/mixins' as mix;
+@use 'sass:color';
+
+.btn {
+  @include mix.touch-target;
+  padding: 0 vars.$space-lg;
+  border-radius: vars.$radius-md;
+  font-weight: vars.$weight-semibold;
+  font-size: vars.$font-sm;
+  transition: all vars.$transition-fast;
+  display: inline-flex;
+  gap: vars.$space-sm;
+  
+  &:active {
+    transform: scale(0.98);
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  &--primary {
+    background-color: vars.$primary;
+    color: #ffffff;
+    
+    &:hover { background-color: color.adjust(vars.$primary, $lightness: 5%); }
+  }
+
+  &--secondary {
+    background-color: transparent;
+    border: 1px solid vars.$primary;
+    color: vars.$primary-light;
+  }
+
+  &--success {
+    background-color: vars.$success;
+    color: #ffffff;
+  }
+
+  &--warning {
+    background-color: vars.$warning;
+    color: #ffffff;
+  }
+
+  &--danger {
+    background-color: vars.$danger;
+    color: #ffffff;
+  }
+
+  &--ghost {
+    background-color: transparent;
+    color: vars.$text-secondary;
+    
+    &:hover { color: vars.$text-primary; }
+  }
+
+  &--sm {
+    min-height: 36px;
+    padding: 0 vars.$space-md;
+    font-size: vars.$font-xs;
+  }
+
+  &--block {
+    width: 100%;
+  }
+}
+
+.fab {
+  position: fixed;
+  bottom: calc(64px + env(safe-area-inset-bottom) + vars.$space-lg);
+  right: vars.$space-lg;
+  width: 56px;
+  height: 56px;
+  border-radius: vars.$radius-full;
+  background-color: vars.$primary;
+  color: #ffffff;
+  @include mix.flex-center;
+  box-shadow: vars.$shadow-md;
+  z-index: vars.$z-base;
+  font-size: vars.$font-xl;
+  transition: transform vars.$transition-fast;
+  
+  &:active {
+    transform: scale(0.95);
+  }
+}

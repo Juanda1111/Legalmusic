@@ -1,0 +1,50 @@
+@use '../abstracts/variables' as vars;
+@use '../abstracts/mixins' as mix;
+
+.form-group {
+  margin-bottom: vars.$space-lg;
+  
+  .form-label {
+    display: block;
+    color: vars.$text-secondary;
+    font-size: vars.$font-sm;
+    font-weight: vars.$weight-medium;
+    margin-bottom: 6px;
+  }
+  
+  .form-control {
+    @include mix.input-base;
+  }
+
+  .form-select {
+    @include mix.input-base;
+    appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%2394A3B8" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+    background-repeat: no-repeat;
+    background-position-x: calc(100% - 12px);
+    background-position-y: center;
+    padding-right: vars.$space-3xl;
+  }
+
+  .form-textarea {
+    @include mix.input-base;
+    min-height: 100px;
+    resize: vertical;
+  }
+
+  .form-error {
+    display: block;
+    color: vars.$danger;
+    font-size: vars.$font-xs;
+    margin-top: vars.$space-xs;
+  }
+}
+
+.form-row {
+  display: flex;
+  gap: vars.$space-md;
+  
+  > * {
+    flex: 1;
+  }
+}

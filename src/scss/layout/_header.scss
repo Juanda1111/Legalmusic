@@ -1,0 +1,136 @@
+@use '../abstracts/variables' as vars;
+@use '../abstracts/mixins' as mix;
+
+.app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 52px;
+  padding: 0 vars.$space-lg;
+  padding-top: env(safe-area-inset-top);
+  background-color: vars.$surface;
+  border-bottom: 1px solid vars.$border;
+  z-index: vars.$z-sticky;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+// Lado izquierdo: Marca
+.header__left {
+  display: flex;
+  align-items: center;
+}
+
+.header__brand {
+  font-size: vars.$font-lg;
+  font-weight: vars.$weight-bold;
+  color: vars.$primary-light;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  letter-spacing: -0.3px;
+
+  svg {
+    color: vars.$primary;
+  }
+}
+
+// Lado derecho: Acciones
+.header__right {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.header__bell,
+.header__logout {
+  width: 40px;
+  height: 40px;
+  border-radius: vars.$radius-full;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: vars.$text-secondary;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all vars.$transition-fast;
+  position: relative;
+
+  &:active {
+    background-color: vars.$surface-elevated;
+    transform: scale(0.95);
+  }
+}
+
+.header__logout {
+  color: vars.$text-secondary;
+
+  &:active {
+    color: vars.$danger;
+  }
+}
+
+// Badge de notificaciones
+.header__badge {
+  position: absolute;
+  top: 6px;
+  right: 4px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  background-color: vars.$danger;
+  color: #fff;
+  font-size: 10px;
+  font-weight: vars.$weight-bold;
+  border-radius: vars.$radius-full;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+// ==========================================
+// Page Header (Cabeceras internas de vistas)
+// ==========================================
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: vars.$space-lg;
+
+  &__title-group {
+    display: flex;
+    align-items: center;
+    gap: vars.$space-sm;
+
+    h2 {
+      font-size: vars.$font-xl;
+      font-weight: vars.$weight-bold;
+      color: vars.$text-primary;
+      margin: 0;
+    }
+  }
+}
+
+// Botón volver (color primario como el logo)
+.btn-back {
+  width: 36px;
+  height: 36px;
+  border-radius: vars.$radius-full;
+  background: transparent;
+  border: none;
+  color: vars.$primary; // MISMO COLOR DEL LOGO
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-left: -8px; // Compensar visualmente el padding del icono
+  transition: all vars.$transition-fast;
+
+  &:active {
+    background-color: rgba(vars.$primary, 0.1);
+  }
+}

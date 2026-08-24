@@ -1,0 +1,38 @@
+@use '../abstracts/variables' as vars;
+@use '../abstracts/mixins' as mix;
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: vars.$radius-full;
+  font-size: vars.$font-xs;
+  font-weight: vars.$weight-semibold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  
+  &--pending {
+    background-color: rgba(vars.$warning, 0.2);
+    color: vars.$warning;
+  }
+
+  &--active, &--signed {
+    background-color: rgba(vars.$primary, 0.2);
+    color: vars.$primary-light;
+  }
+
+  &--completed, &--paid {
+    background-color: rgba(vars.$success, 0.2);
+    color: vars.$success;
+  }
+
+  &--overdue, &--cancelled {
+    background-color: rgba(vars.$danger, 0.2);
+    color: vars.$danger;
+  }
+
+  &--draft {
+    background-color: vars.$surface-elevated;
+    color: vars.$text-secondary;
+  }
+}

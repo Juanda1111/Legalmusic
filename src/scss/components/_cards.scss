@@ -1,0 +1,163 @@
+@use '../abstracts/variables' as vars;
+@use '../abstracts/mixins' as mix;
+
+.card {
+  @include mix.card-base;
+  margin-bottom: vars.$space-lg;
+  
+  &--highlight {
+    border-left-width: 4px;
+    
+    &.primary { border-left-color: vars.$primary; }
+    &.success { border-left-color: vars.$success; }
+    &.warning { border-left-color: vars.$warning; }
+    &.danger { border-left-color: vars.$danger; }
+  }
+}
+
+.card-header {
+  @include mix.flex-between;
+  margin-bottom: vars.$space-md;
+  
+  .title {
+    font-size: vars.$font-base;
+    font-weight: vars.$weight-semibold;
+  }
+}
+
+.card-body {
+  color: vars.$text-secondary;
+  font-size: vars.$font-sm;
+  line-height: 1.5;
+}
+
+.card-footer {
+  @include mix.flex-between;
+  margin-top: vars.$space-md;
+  padding-top: vars.$space-sm;
+  border-top: 1px solid vars.$border;
+}
+
+// KPI Cards
+.kpi-card {
+  @include mix.card-base;
+  padding: vars.$space-md;
+  display: flex;
+  flex-direction: column;
+  gap: vars.$space-xs;
+  
+  .icon-wrapper {
+    width: 32px;
+    height: 32px;
+    border-radius: vars.$radius-sm;
+    background-color: rgba(vars.$primary, 0.1);
+    color: vars.$primary-light;
+    @include mix.flex-center;
+    margin-bottom: vars.$space-xs;
+  }
+  
+  .value {
+    font-size: vars.$font-xl;
+    font-weight: vars.$weight-bold;
+    color: vars.$text-primary;
+  }
+  
+  .label {
+    font-size: vars.$font-xs;
+    color: vars.$text-secondary;
+  }
+}
+
+// Compact Cards (Lists)
+.compact-card {
+  background-color: vars.$surface;
+  border: 1px solid vars.$border;
+  border-radius: vars.$radius-md;
+  padding: vars.$space-md;
+  border-left: 3px solid transparent;
+  transition: transform vars.$transition-fast;
+
+  &:active {
+    transform: scale(0.98);
+    background-color: vars.$surface-elevated;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: vars.$space-sm;
+
+    strong {
+      font-size: vars.$font-base;
+      font-weight: vars.$weight-semibold;
+      color: vars.$text-primary;
+      line-height: 1.3;
+      flex: 1;
+      padding-right: vars.$space-sm;
+    }
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: vars.$space-sm;
+
+    .detail-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: vars.$font-sm;
+      color: vars.$text-secondary;
+
+      svg {
+        flex-shrink: 0;
+        color: vars.$text-secondary;
+      }
+    }
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: vars.$space-sm;
+    border-top: 1px dashed vars.$border;
+
+    .amount, .accent-text {
+      font-size: vars.$font-base;
+      font-weight: vars.$weight-bold;
+      color: vars.$text-primary;
+    }
+  }
+
+  // Variantes de estado
+  &.status-borrador { border-left-color: vars.$text-secondary; }
+  &.status-firmado { border-left-color: vars.$primary; }
+  &.status-en_ejecucion { border-left-color: vars.$warning; }
+  &.status-completado, &.status-pagado { border-left-color: vars.$success; }
+  &.status-cancelado, &.status-atrasado { border-left-color: vars.$danger; }
+  &.status-pendiente { border-left-color: vars.$warning; }
+}
+
+// Global Empty State
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: vars.$space-3xl 0;
+  color: vars.$text-secondary;
+  text-align: center;
+  opacity: 0.7;
+
+  svg {
+    margin-bottom: vars.$space-md;
+    color: vars.$border;
+  }
+
+  p {
+    font-size: vars.$font-sm;
+  }
+}
