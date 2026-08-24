@@ -12,4 +12,7 @@ export default defineConfig({
     cssMinify: true,
     minify: true,
   },
+  server: {
+    host: true
+  }
 });
