@@ -1,0 +1,128 @@
+@use '../abstracts/variables' as vars;
+@use '../abstracts/mixins' as mix;
+
+// Contenedor full-screen para la vista de autenticación
+.main-content--full {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: vars.$space-lg;
+  background: radial-gradient(circle at center top, vars.$surface-elevated 0%, vars.$bg-base 70%);
+}
+
+.auth-container {
+  width: 100%;
+  max-width: 380px;
+  padding: vars.$space-2xl vars.$space-xl;
+  background-color: vars.$surface;
+  border-radius: vars.$radius-lg;
+  border: 1px solid vars.$border;
+  box-shadow: vars.$shadow-md;
+}
+
+// Logo y branding
+.auth-logo {
+  text-align: center;
+  margin-bottom: vars.$space-3xl;
+
+  svg {
+    color: vars.$primary-light;
+    margin-bottom: vars.$space-sm;
+  }
+
+  h1 {
+    font-size: vars.$font-3xl;
+    font-weight: vars.$weight-extrabold;
+    color: vars.$primary-light;
+    margin-bottom: vars.$space-xs;
+    letter-spacing: -0.5px;
+  }
+
+  p {
+    font-size: vars.$font-sm;
+    color: vars.$text-secondary;
+    font-weight: vars.$weight-regular;
+  }
+}
+
+// Tabs de Login / Registro — bien separados como píldoras
+.auth-tabs {
+  display: flex;
+  gap: vars.$space-sm;
+  background-color: vars.$surface-elevated;
+  border-radius: vars.$radius-full;
+  padding: 4px;
+  margin-bottom: vars.$space-2xl;
+}
+
+.auth-tab {
+  flex: 1;
+  text-align: center;
+  padding: vars.$space-md 0;
+  border-radius: vars.$radius-full;
+  font-size: vars.$font-sm;
+  font-weight: vars.$weight-semibold;
+  color: vars.$text-secondary;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all vars.$transition-base;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:active {
+    transform: scale(0.97);
+  }
+
+  &.active {
+    background-color: vars.$primary;
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
+  }
+}
+
+// Contenedor del formulario
+.auth-form-container {
+  margin-bottom: vars.$space-lg;
+}
+
+// Formulario
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: vars.$space-lg;
+
+  .btn--primary {
+    margin-top: vars.$space-sm;
+    min-height: 48px;
+    font-size: vars.$font-base;
+  }
+}
+
+// Botón de acceso demo
+.auth-demo-btn {
+  margin-top: vars.$space-lg;
+  width: 100%;
+  min-height: 44px;
+  font-size: vars.$font-sm;
+  color: vars.$text-secondary;
+  border: 1px dashed vars.$border;
+  border-radius: vars.$radius-md;
+  transition: all vars.$transition-fast;
+
+  &:active {
+    color: vars.$primary-light;
+    border-color: vars.$primary;
+  }
+}
+
+// Footer
+.auth-footer {
+  margin-top: vars.$space-2xl;
+  text-align: center;
+  font-size: vars.$font-xs;
+  color: vars.$text-secondary;
+}
