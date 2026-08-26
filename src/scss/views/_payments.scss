@@ -2,6 +2,8 @@
 @use '../abstracts/mixins' as mix;
 
 .payments-view {
+  padding-top: vars.$space-lg;
+
   .flex { display: flex; }
   .flex-col { flex-direction: column; }
   .justify-between { justify-content: space-between; }
@@ -174,18 +176,21 @@
 
   .payment-tabs {
     display: flex;
+    width: fit-content;
+    max-width: 100%;
+    margin-bottom: vars.$space-md;
     background-color: vars.$surface-elevated;
     border-radius: vars.$radius-md;
     padding: 4px;
     gap: 2px;
 
     .payment-tab {
-      flex: 1;
+      flex: 0 0 auto;
       display: inline-flex;
       justify-content: center;
       align-items: center;
       gap: 4px;
-      padding: vars.$space-sm 0;
+      padding: vars.$space-sm vars.$space-md;
       border-radius: vars.$radius-md;
       font-size: vars.$font-xs;
       font-weight: vars.$weight-medium;
@@ -202,7 +207,7 @@
   }
 
   .payment-card {
-    padding: vars.$space-lg;
+    padding: vars.$space-md;
     margin-bottom: vars.$space-md;
     background: vars.$surface;
     border: 1px solid vars.$border;
@@ -239,8 +244,8 @@
     &__content {
       display: flex;
       justify-content: space-between;
-      gap: vars.$space-lg;
-      padding: vars.$space-md 0;
+      gap: vars.$space-md;
+      padding: vars.$space-sm 0;
     }
 
     &__info { min-width: 0; }
@@ -248,14 +253,14 @@
     &__contract {
       overflow: hidden;
       color: vars.$text-secondary;
-      font-size: vars.$font-base;
+      font-size: vars.$font-sm;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
 
     h3 {
       margin-top: vars.$space-xs;
-      font-size: vars.$font-lg;
+      font-size: vars.$font-base;
     }
 
     &__client {
@@ -268,7 +273,7 @@
       display: flex;
       align-items: center;
       gap: vars.$space-xs;
-      margin-top: vars.$space-md;
+      margin-top: vars.$space-sm;
       color: vars.$text-secondary;
       font-size: vars.$font-xs;
     }
@@ -282,7 +287,7 @@
 
     &__action {
       display: flex;
-      flex: 0 0 145px;
+      flex: 0 0 120px;
       flex-direction: column;
       align-items: flex-end;
       gap: vars.$space-sm;
@@ -302,8 +307,7 @@
     }
 
     .payment-amount {
-      margin-top: vars.$space-sm;
-      font-size: vars.$font-xl;
+      font-size: vars.$font-lg;
       font-weight: vars.$weight-bold;
       color: vars.$text-primary;
     }
@@ -311,6 +315,16 @@
 
   @media (max-width: 520px) {
     .payments-summary { padding: vars.$space-md vars.$space-sm; }
+
+    .payment-tabs {
+      width: 100%;
+
+      .payment-tab {
+        flex: 1;
+        padding-left: vars.$space-sm;
+        padding-right: vars.$space-sm;
+      }
+    }
 
     .payment-card {
       &__content { flex-direction: column; gap: vars.$space-md; }

@@ -315,7 +315,7 @@
 
   .dash-section--events { grid-column: span 7; }
   .dash-section--payments { grid-column: span 5; }
-  .dash-section--contracts { grid-column: 1 / -1; }
+  .dash-section--contracts { grid-column: span 7; }
 
   .fab {
     right: max(32px, calc((100vw - 1280px) / 2));

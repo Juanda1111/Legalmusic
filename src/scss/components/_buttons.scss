@@ -72,9 +72,10 @@
   position: fixed;
   bottom: calc(64px + env(safe-area-inset-bottom) + vars.$space-lg);
   right: vars.$space-lg;
-  width: 56px;
-  height: 56px;
-  border-radius: vars.$radius-full;
+  width: 52px;
+  height: 52px;
+  border: 1px solid vars.$primary-light;
+  border-radius: vars.$radius-md;
   background-color: vars.$primary;
   color: #ffffff;
   @include mix.flex-center;

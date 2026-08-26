@@ -11,15 +11,9 @@ export function renderNotificationsView() {
 
   return `
     <div class="notifications-view">
-      <header class="page-header">
-        <div class="page-header__title-group">
-          <button class="btn-back" id="btnBackDashboard" aria-label="Volver al inicio">
-            ${icon('chevronLeft', 24)}
-          </button>
-          <h2>Notificaciones</h2>
-        </div>
+      <div class="notifications-view__summary">
         <span class="badge badge--type">${notifications.length}</span>
-      </header>
+      </div>
 
       ${notifications.length === 0 ? `
         <div class="empty-state">
@@ -51,8 +45,6 @@ export function renderNotificationsView() {
 export function initNotificationsViewEvents() {
   const container = document.querySelector('.notifications-view');
   if (!container) return;
-
-  document.getElementById('btnBackDashboard')?.addEventListener('click', () => navigate('dashboard'));
 
   container.addEventListener('click', (event) => {
     if (event.target.closest('.notification-item')) {

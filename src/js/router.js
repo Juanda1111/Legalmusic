@@ -103,7 +103,7 @@ const transitionTo = (hash) => {
   renderRouteLoader();
   setTimeout(() => {
     if (currentTransition === transitionId) renderView(hash.substring(1).split(':')[0]);
-  }, 180);
+  }, 300);
 };
 
 // Renderizar la vista actual
@@ -146,7 +146,7 @@ export const renderView = (viewId) => {
 
     // Renderizar layout completo
     appContainer.innerHTML = `
-      ${renderHeader(user, notifCount)}
+      ${renderHeader(user, notifCount, baseViewId)}
       <main class="main-content">
         ${param ? route.render(param) : route.render()}
       </main>

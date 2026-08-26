@@ -2,6 +2,8 @@
 
 // Contenedor principal para vistas autenticadas (con header y bottom nav)
 .main-content {
+  display: flex;
+  flex-direction: column;
   padding-top: calc(52px + env(safe-area-inset-top) + vars.$space-md);
   padding-bottom: calc(60px + env(safe-area-inset-bottom) + vars.$space-md);
   padding-left: vars.$space-lg;
@@ -14,8 +16,7 @@
 .main-content > * {
   width: 100%;
   max-width: 1120px;
-  margin-left: auto;
-  margin-right: auto;
+  margin: auto;
 }
 
 .route-loader {
@@ -49,6 +50,10 @@
     padding-left: vars.$space-2xl;
     padding-right: vars.$space-2xl;
     padding-bottom: 112px;
+  }
+
+  .main-content:not(.main-content--full) {
+    min-height: calc(100vh - 52px - 60px);
   }
 
   .main-content > .dashboard-view {

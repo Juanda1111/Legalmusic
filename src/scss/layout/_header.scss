@@ -21,6 +21,23 @@
 .header__left {
   display: flex;
   align-items: center;
+  min-width: 0;
+  gap: vars.$space-sm;
+}
+
+.header__back {
+  width: 32px;
+  height: 32px;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: vars.$primary;
+  border-radius: vars.$radius-full;
+
+  &:active {
+    background-color: rgba(vars.$primary, 0.1);
+  }
 }
 
 .header__brand {
@@ -36,8 +53,49 @@
   background: transparent;
   cursor: pointer;
 
+  .header__left > & + .header__context {
+    margin-left: vars.$space-xs;
+  }
+
   svg {
     color: vars.$primary;
+  }
+}
+
+.header__context {
+  display: flex;
+  align-items: baseline;
+  gap: vars.$space-sm;
+  min-width: 0;
+  overflow: hidden;
+  padding-left: vars.$space-md;
+  border-left: 1px solid vars.$border;
+  color: vars.$text-primary;
+  font-size: vars.$font-sm;
+  font-weight: vars.$weight-semibold;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  small {
+    overflow: hidden;
+    color: vars.$text-secondary;
+    font-size: 10px;
+    font-weight: vars.$weight-regular;
+    text-overflow: ellipsis;
+  }
+}
+
+.header__new {
+  flex: 0 0 auto;
+}
+
+@media (min-width: 900px) {
+  .header__context {
+    font-size: vars.$font-base;
+
+    small {
+      font-size: vars.$font-xs;
+    }
   }
 }
 

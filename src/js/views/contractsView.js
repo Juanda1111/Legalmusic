@@ -12,19 +12,6 @@ const FILTERS = ['Todos', 'Borrador', 'Firmado', 'En Ejecución', 'Completado', 
 export function renderContractsView() {
     return `
         <div class="contracts-view">
-            <!-- Cabecera de la vista -->
-            <header class="page-header">
-                <div class="page-header__title-group">
-                    <button class="btn-back" id="btnBackDashboard" aria-label="Volver al inicio">
-                        ${icon('chevronLeft', 24)}
-                    </button>
-                    <h2>Contratos</h2>
-                </div>
-                <button class="btn btn--primary btn--sm" id="btnNewContractHeader">
-                    ${icon('plus', 16)} Nuevo
-                </button>
-            </header>
-
             <!-- Barra de filtros -->
             <div class="filter-bar" id="contractsFilterBar">
                 ${renderFilters()}
@@ -34,6 +21,9 @@ export function renderContractsView() {
             <div class="contract-list" id="contractListContainer">
                 ${renderContractList()}
             </div>
+            <button class="fab" id="btnNewContractHeader" aria-label="Crear nuevo contrato" title="Nuevo contrato">
+                ${icon('plus', 24)}
+            </button>
         </div>
     `;
 }
@@ -101,12 +91,6 @@ function renderContractList() {
 export function initContractsViewEvents(action) {
     const container = document.querySelector('.contracts-view');
     if (!container) return;
-
-    // Botón volver
-    const btnBack = document.getElementById('btnBackDashboard');
-    if (btnBack) {
-        btnBack.addEventListener('click', () => navigate('dashboard'));
-    }
 
     // Delegación de eventos para filtros y tarjetas
     container.addEventListener('click', (e) => {

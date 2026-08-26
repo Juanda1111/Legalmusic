@@ -16,22 +16,12 @@ export function renderEventsView() {
 
     return `
         <div class="events-view">
-            <!-- Cabecera -->
-            <header class="page-header">
-                <div class="page-header__title-group">
-                    <button class="btn-back" id="btnBackDashboard" aria-label="Volver al inicio">
-                        ${icon('chevronLeft', 24)}
-                    </button>
-                    <h2>Eventos</h2>
-                </div>
-                <button class="btn btn--primary btn--sm" id="btnNewEventHeader">
-                    ${icon('plus', 16)} Nuevo
-                </button>
-            </header>
-
             <div class="event-list" id="eventListContainer">
                 ${renderEventList(sortedEvents, contracts, riders)}
             </div>
+            <button class="fab" id="btnNewEventHeader" aria-label="Crear nuevo evento" title="Nuevo evento">
+                ${icon('plus', 24)}
+            </button>
         </div>
     `;
 }
@@ -84,12 +74,6 @@ function renderEventList(events, contracts, riders) {
 export function initEventsViewEvents(action) {
     const container = document.querySelector('.events-view');
     if (!container) return;
-
-    // Botón volver
-    const btnBack = document.getElementById('btnBackDashboard');
-    if (btnBack) {
-        btnBack.addEventListener('click', () => navigate('dashboard'));
-    }
 
     // Delegación
     container.addEventListener('click', (e) => {

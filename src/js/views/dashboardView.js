@@ -160,7 +160,9 @@ export function renderDashboardView() {
             ` : ''}
 
             <!-- FAB -->
-            <button class="fab" id="dashboardFab">${icon('plus', 24)}</button>
+            <button class="fab" id="dashboardFab" aria-label="Crear nuevo" title="Crear nuevo">
+                ${icon('plus', 24)}
+            </button>
         </div>
     `;
 }

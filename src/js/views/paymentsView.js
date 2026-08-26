@@ -40,11 +40,6 @@ export function renderPaymentsView(action) {
 
   let html = `
     <div class="payments-view">
-      <header class="payments-heading">
-        <h1 class="view-title">Pagos</h1>
-        <p>Controla lo recibido y lo que está por cobrar.</p>
-      </header>
-
       <section class="payments-summary" aria-label="Resumen financiero">
         <div class="payments-summary__item">
           <span><span class="summary-dot summary-dot--warning"></span>Por cobrar</span>
@@ -136,7 +131,6 @@ export function renderPaymentsView(action) {
             </div>
             <div class="payment-card__action">
               <strong class="payment-amount">${formatCurrency(payment.amount)}</strong>
-              <span class="badge badge--${statusClass}">${getStatusLabel(payment.status)}</span>
               ${contract.id ? `<button class="btn btn--ghost btn--sm btn-view-contract" data-contract-id="${contract.id}">Ver contrato</button>` : ''}
             </div>
           </div>

@@ -37,16 +37,6 @@ export function renderContractDetailView(contractId) {
 
   return `
     <div class="contract-detail">
-      <!-- Cabecera -->
-      <header class="page-header">
-          <div class="page-header__title-group">
-              <button class="btn-back" id="btnBackToContracts" aria-label="Volver a contratos">
-                  ${icon('chevronLeft', 24)}
-              </button>
-              <h2>Detalle</h2>
-          </div>
-      </header>
-
       <div class="detail-header mb-4">
         <span class="badge badge--${statusClass} mb-2" style="display:inline-block">${getStatusLabel(contract.status)}</span>
         <h2 class="mb-1" style="font-size: 1.5rem; font-weight: bold; margin-bottom: 4px;">${contract.title}</h2>
@@ -151,9 +141,6 @@ export function initContractDetailViewEvents(contractId) {
   // Botones de volver
   const btnBackError = document.getElementById('btnBackError');
   if (btnBackError) btnBackError.addEventListener('click', () => navigate('contracts'));
-
-  const btnBack = document.getElementById('btnBackToContracts');
-  if (btnBack) btnBack.addEventListener('click', () => navigate('contracts'));
 
   const container = document.querySelector('.contract-detail');
   if (!container) return;

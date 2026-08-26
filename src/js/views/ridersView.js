@@ -16,16 +16,6 @@ export function renderRidersView() {
 
   let html = `
     <div class="riders-view">
-      <!-- Cabecera -->
-      <header class="page-header">
-          <div class="page-header__title-group">
-              <button class="btn-back" id="btnBackDashboard" aria-label="Volver al inicio">
-                  ${icon('chevronLeft', 24)}
-              </button>
-              <h2>Riders Técnicos</h2>
-          </div>
-      </header>
-
       <div class="riders-container">
   `;
 
@@ -169,12 +159,6 @@ export function renderRidersView() {
 export function initRidersViewEvents() {
   const container = document.querySelector('.riders-view');
   if (!container) return;
-
-  // Botón volver
-  const btnBack = document.getElementById('btnBackDashboard');
-  if (btnBack) {
-      btnBack.addEventListener('click', () => navigate('dashboard'));
-  }
 
   // Collapsible sections
   container.addEventListener('click', (e) => {
