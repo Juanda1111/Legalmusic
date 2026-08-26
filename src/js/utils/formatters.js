@@ -1,3 +1,12 @@
+const parseDate = (dateString) => {
+  if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
+    const [year, month, day] = dateString.split('-').map(Number);
+    return new Date(year, month - 1, day);
+  }
+
+  return new Date(dateString);
+};
+
 export const formatCurrency = (amount) => {
   return new Intl.NumberFormat('es-CO', {
     style: 'currency',
@@ -8,7 +17,7 @@ export const formatCurrency = (amount) => {
 
 export const formatDate = (dateString) => {
   if (!dateString) return '';
-  const date = new Date(dateString);
+  const date = parseDate(dateString);
   return date.toLocaleDateString('es-CO', {
     day: '2-digit',
     month: '2-digit',
@@ -18,7 +27,7 @@ export const formatDate = (dateString) => {
 
 export const formatDateTime = (dateString) => {
   if (!dateString) return '';
-  const date = new Date(dateString);
+  const date = parseDate(dateString);
   return date.toLocaleDateString('es-CO', {
     day: '2-digit',
     month: '2-digit',
@@ -30,7 +39,7 @@ export const formatDateTime = (dateString) => {
 
 export const formatRelativeDate = (dateString) => {
   if (!dateString) return '';
-  const date = new Date(dateString);
+  const date = parseDate(dateString);
   const now = new Date();
   
   // Strip time for day comparison
