@@ -79,10 +79,31 @@ export const navigate = (viewId, param) => {
   const nextHash = param ? `#${viewId}:${param}` : `#${viewId}`;
 
   if (window.location.hash === nextHash) {
-    renderView(viewId);
+    transitionTo(nextHash);
   } else {
     window.location.hash = nextHash;
   }
+};
+
+let transitionId = 0;
+
+const renderRouteLoader = () => {
+  const appContainer = document.getElementById('app');
+  if (!appContainer) return;
+  appContainer.innerHTML = `
+    <main class="route-loader" aria-live="polite" aria-label="Cargando">
+      <div class="route-loader__spinner"></div>
+      <span>Cargando</span>
+    </main>
+  `;
+};
+
+const transitionTo = (hash) => {
+  const currentTransition = ++transitionId;
+  renderRouteLoader();
+  setTimeout(() => {
+    if (currentTransition === transitionId) renderView(hash.substring(1).split(':')[0]);
+  }, 180);
 };
 
 // Renderizar la vista actual
@@ -164,7 +185,7 @@ export const initRouter = () => {
   // Escuchar cambios en el hash
   window.addEventListener('hashchange', () => {
     const viewId = getCurrentView();
-    renderView(viewId);
+    transitionTo(window.location.hash);
   });
 
   // Renderizado inicial

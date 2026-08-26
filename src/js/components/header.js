@@ -12,7 +12,9 @@ export const renderHeader = (user, notificationCount) => {
   return `
     <header class="app-header">
       <div class="header__left">
-        <h1 class="header__brand">LegalMusic ${icon('music', 18)}</h1>
+        <button class="header__brand" id="btnBrandDashboard" aria-label="Ir al inicio">
+          <span>LegalMusic</span> ${icon('music', 18)}
+        </button>
       </div>
       <div class="header__right">
         <button class="header__bell" id="btnNotifications" aria-label="Notificaciones">
@@ -28,6 +30,11 @@ export const renderHeader = (user, notificationCount) => {
 };
 
 export const initHeaderEvents = () => {
+  const btnBrand = document.getElementById('btnBrandDashboard');
+  if (btnBrand) {
+    btnBrand.addEventListener('click', () => navigate('dashboard'));
+  }
+
   const btnLogout = document.getElementById('btnLogout');
   if (btnLogout) {
     btnLogout.addEventListener('click', () => {

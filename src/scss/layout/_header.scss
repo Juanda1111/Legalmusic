@@ -31,6 +31,10 @@
   align-items: center;
   gap: 6px;
   letter-spacing: -0.3px;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
 
   svg {
     color: vars.$primary;
