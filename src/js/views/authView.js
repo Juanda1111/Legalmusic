@@ -2,6 +2,7 @@ import { icon } from '../components/icons.js';
 import { navigate } from '../router.js';
 import { authService, DEMO_CREDENTIALS } from '../services/authService.js';
 import { isRequired, isEmail, isMinLength } from '../utils/validators.js';
+import { store } from '../state/store.js';
 
 let currentTab = 'login'; // 'login' o 'register'
 
@@ -141,6 +142,7 @@ function bindFormEvents() {
             if (valid) {
                 try {
                     authService.login(email, password);
+                    store.loadFromStorage();
                     navigate('dashboard');
                 } catch (err) {
                     loginForm.password.nextElementSibling.textContent = err.message;
@@ -191,6 +193,7 @@ function bindFormEvents() {
             if (valid) {
                 try {
                     authService.register({ name: fullName, studio: studioName, email, password });
+                    store.loadFromStorage();
                     navigate('dashboard');
                 } catch (err) {
                     registerForm.email.nextElementSibling.textContent = err.message;
@@ -207,6 +210,7 @@ function bindDemoButton() {
         demoBtn.addEventListener('click', () => {
             try {
                 authService.login(DEMO_CREDENTIALS.email, DEMO_CREDENTIALS.password);
+                store.loadFromStorage();
                 navigate('dashboard');
             } catch (err) {
                 // Si falla el demo, mostrar error en consola

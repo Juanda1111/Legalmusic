@@ -8,6 +8,7 @@ import { renderWhatsAppMenuButton, initWhatsAppMenus } from '../components/notif
 import { renderCalendarButton, initCalendarButtons } from '../components/notifications/CalendarButton.js';
 import { REMINDER_OPTIONS_EVENTOS } from '../utils/notifications/reminders.js';
 import { EVENT_TEMPLATES } from '../utils/formTemplates.js';
+import { renderEmptyState } from '../components/emptyState.js';
 
 export function renderEventsView() {
     const state = store.getState();
@@ -33,16 +34,16 @@ export function renderEventsView() {
 function renderEventList(events, contracts, riders) {
     if (events.length === 0) {
         return `
-            <div class="empty-state">
-                ${icon('calendar', 48)}
-                <p>No hay eventos programados</p>
-            </div>
+            ${renderEmptyState({ iconName: 'calendar', title: 'Aún no hay eventos', description: 'Programa tu primer evento y tendrás fechas, horarios y recordatorios en un solo lugar.', actionId: 'btnEmptyNewEvent', actionLabel: 'Crear evento', page: true })}
         `;
     }
 
+    const contractsById = new Map(contracts.map(contract => [String(contract.id), contract]));
+    const ridersByEventId = new Set(riders.map(rider => String(rider.eventId)));
+
     return events.map(e => {
-        const contract = contracts.find(c => String(c.id) === String(e.contractId));
-        const hasRider = riders.some(rider => String(rider.eventId) === String(e.id));
+        const contract = contractsById.get(String(e.contractId));
+        const hasRider = ridersByEventId.has(String(e.id));
         return `
             <div class="compact-card compact-card--highlight status-${e.status} event-card" data-id="${e.id}">
                 <div class="compact-card__header">
@@ -82,7 +83,7 @@ export function initEventsViewEvents(action) {
     // Delegación
     container.addEventListener('click', (e) => {
         // Nuevo evento
-        if (e.target.closest('#btnNewEventHeader')) {
+        if (e.target.closest('#btnNewEventHeader, #btnEmptyNewEvent')) {
             const contracts = store.getState().contracts || [];
             openModal('Nuevo Evento', renderEventForm({}, contracts));
             bindEventFormEvents();
@@ -155,9 +156,9 @@ function showEventDetail(event) {
             ` : ''}
 
                         <div class="notification-event-actions">
-                              ${renderCalendarButton({ title: `Evento - ${event.name}`, description: `${event.venue} · Presentación de ${event.artist || event.name}`, date: event.date, time: event.showTime, reminderOptions: REMINDER_OPTIONS_EVENTOS, label: 'Enviar evento al calendario' })}
-                              ${renderCalendarButton({ title: `Prueba de sonido - ${event.artist || event.name}`, description: event.venue, date: event.date, time: event.soundcheckTime, reminderOptions: REMINDER_OPTIONS_EVENTOS, label: 'Enviar prueba al calendario' })}
-                            ${renderWhatsAppMenuButton({ phone: event.telefono || contract?.telefono || contract?.phone, options: [
+                                                            ${renderCalendarButton({ title: `Evento - ${event.name}`, description: `${event.venue} · Presentación de ${event.artist || event.name}`, date: event.date, time: event.showTime, reminderOptions: REMINDER_OPTIONS_EVENTOS, label: 'Agregar evento al calendario' })}
+                            ${renderCalendarButton({ title: `Prueba de sonido - ${event.artist || event.name}`, description: event.venue, date: event.date, time: event.soundcheckTime, reminderOptions: REMINDER_OPTIONS_EVENTOS, label: 'Agregar prueba de sonido al calendario' })}
+                                                        ${renderWhatsAppMenuButton({ phone: event.telefono || contract?.telefono || contract?.phone, label: 'Elegir aviso para enviar por WhatsApp', options: [
                                 { label: 'Recordatorio de evento', templateKey: 'evento_recordatorio', templateData: { artista: event.artist || event.name, fecha: formatDate(event.date), lugar: event.venue, horaPruebaSonido: event.soundcheckTime, horaEvento: event.showTime } },
                                 { label: 'Prueba de sonido', templateKey: 'evento_prueba_sonido', templateData: { artista: event.artist || event.name, fecha: formatDate(event.date), lugar: event.venue, horaPruebaSonido: event.soundcheckTime } },
                                 { label: 'Hora de llegada', templateKey: 'evento_llegada', templateData: { artista: event.artist || event.name, fecha: formatDate(event.date), lugar: event.venue, horaLlegada: event.soundcheckTime } }

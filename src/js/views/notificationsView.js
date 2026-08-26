@@ -3,6 +3,7 @@ import { store } from '../state/store.js';
 import { formatCurrency, formatDate } from '../utils/formatters.js';
 import { notificationEngine } from '../services/notificationEngine.js';
 import { navigate } from '../router.js';
+import { renderEmptyState } from '../components/emptyState.js';
 
 export function renderNotificationsView() {
   const state = store.getState();
@@ -16,10 +17,7 @@ export function renderNotificationsView() {
       </div>
 
       ${notifications.length === 0 ? `
-        <div class="empty-state">
-          ${icon('bell', 48)}
-          <p>No hay notificaciones pendientes.</p>
-        </div>
+        ${renderEmptyState({ iconName: 'bell', title: 'Todo está al día', description: 'Aquí aparecerán los avisos importantes de pagos y eventos.', page: true })}
       ` : `
         <div class="notifications-list">
           ${notifications.map(notification => {

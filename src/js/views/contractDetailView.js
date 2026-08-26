@@ -93,7 +93,7 @@ export function renderContractDetailView(contractId) {
             </div>
 
             <div class="notification-actions">
-              ${renderWhatsAppButton({ phone: contract.telefono || contract.phone, templateKey: 'pago_recordatorio', templateData: { nombreCliente: contract.clientName || contract.client || 'Cliente', valor: formatCurrency(nextPayment?.amount || 0), fecha: nextPayment ? formatDate(nextPayment.dueDate) : 'la fecha indicada' }, label: 'Enviar recordatorio por WhatsApp' })}
+              ${renderWhatsAppButton({ phone: contract.telefono || contract.phone, templateKey: 'pago_recordatorio', templateData: { nombreCliente: contract.clientName || contract.client || 'Cliente', valor: formatCurrency(nextPayment?.amount || 0), fecha: nextPayment ? formatDate(nextPayment.dueDate) : 'la fecha indicada' }, label: 'Enviar recordatorio de pago por WhatsApp' })}
             </div>
 
             <div style="margin-bottom: 8px;">

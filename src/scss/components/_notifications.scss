@@ -1,6 +1,6 @@
 @use '../abstracts/variables' as vars;
 
-.notification-action { min-height: 32px; padding: 0 vars.$space-sm; white-space: nowrap; }
+.notification-action { min-height: 36px; padding: 6px vars.$space-sm; text-align: center; line-height: 1.2; white-space: normal; }
 .notification-reminder { display: inline-flex; align-items: center; gap: 4px; color: vars.$text-secondary; font-size: 10px; }
 .notification-reminder__select { max-width: 100px; padding: 4px; color: vars.$text-primary; background: vars.$surface-elevated; border: 1px solid vars.$border; border-radius: vars.$radius-sm; font-size: 10px; }
 .notification-menu { position: relative; display: inline-block; }
@@ -23,4 +23,7 @@
 .template-save span { color: vars.$text-secondary; font-size: 11px; }
 .template-save .form-control { min-height: 40px; }
 .template-save .btn { width: 100%; min-height: 40px; background: vars.$success; color: #ffffff; }
+.notification-event-actions { display: grid; gap: 10px; margin-top: 16px; }
+.notification-event-actions .notification-calendar { display: grid; gap: 6px; }
+.notification-event-actions .notification-action { width: 100%; }
 @media (max-width: 600px) { .notification-payment-row { grid-template-columns: minmax(0, 1fr) auto; } .notification-payment-row > .badge { grid-column: 1 / -1; justify-self: start; } }

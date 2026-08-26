@@ -5,6 +5,7 @@ import { openBottomSheet, closeModal } from '../components/modal.js';
 import { navigate } from '../router.js';
 import { authService } from '../services/authService.js';
 import { contractService } from '../services/contractService.js';
+import { renderEmptyState } from '../components/emptyState.js';
 
 export function renderDashboardView() {
     const state = store.getState();
@@ -12,6 +13,12 @@ export function renderDashboardView() {
     const contracts = state.contracts || [];
     const events = state.events || [];
     const payments = state.payments || [];
+    const paymentsByContract = new Map();
+    payments.forEach(payment => {
+        const contractPayments = paymentsByContract.get(String(payment.contractId)) || [];
+        contractPayments.push(payment);
+        paymentsByContract.set(String(payment.contractId), contractPayments);
+    });
 
     // Calcular KPIs
     const activeContracts = contracts.filter(c => c.status === 'firmado' || c.status === 'en_ejecucion');
@@ -45,7 +52,7 @@ export function renderDashboardView() {
     const contractHighlights = contracts
         .map(contract => ({
             contract,
-            nextPayment: contractService.getNextPayment(payments.filter(payment => String(payment.contractId) === String(contract.id)))
+            nextPayment: contractService.getNextPayment(paymentsByContract.get(String(contract.id)) || [])
         }))
         .filter(item => item.nextPayment)
         .sort((a, b) => contractService.parseDate(a.nextPayment.dueDate) - contractService.parseDate(b.nextPayment.dueDate))
@@ -107,7 +114,7 @@ export function renderDashboardView() {
             <section class="dash-section dash-section--events">
                 <h3 class="dash-section__title">Próximos Eventos</h3>
                 ${next3Events.length === 0
-                    ? '<p class="dash-section__empty">No hay eventos próximos</p>'
+                    ? renderEmptyState({ iconName: 'calendar', title: 'Sin eventos próximos', description: 'Tus próximos eventos aparecerán aquí.', compact: true })
                     : next3Events.map(e => `
                     <div class="dash-event-card">
                         <div class="dash-event-card__main">
@@ -126,7 +133,7 @@ export function renderDashboardView() {
                     <button class="btn btn--ghost btn--sm" id="btnViewContracts">Ver todos</button>
                 </div>
                 ${contractHighlights.length === 0
-                    ? '<p class="dash-section__empty">No hay pagos programados</p>'
+                    ? renderEmptyState({ iconName: 'fileText', title: 'Sin pagos programados', description: 'Crea un contrato con calendario de pagos para verlo aquí.', compact: true })
                     : contractHighlights.map(({ contract, nextPayment }) => `
                     <button class="dash-contract-card" data-contract-id="${contract.id}">
                         <span class="dash-contract-card__main">

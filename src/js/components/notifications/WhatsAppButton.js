@@ -4,7 +4,7 @@ import { validatePhone, NOTIFICATION_MESSAGES } from '../../utils/notifications/
 import { renderActionButton } from './ActionButton.js';
 import { showToast } from '../toast.js';
 
-export const renderWhatsAppButton = ({ phone, templateKey, templateData, label = 'WhatsApp' }) => {
+export const renderWhatsAppButton = ({ phone, templateKey, templateData, label = 'Enviar recordatorio de pago por WhatsApp' }) => {
   const validation = validatePhone({ telefono: phone });
   const link = validation.valid ? buildWhatsAppLink(phone, buildMessage(templateKey, templateData)) : '';
   return renderActionButton({ label, disabled: !validation.valid, disabledReason: validation.reason, className: 'notification-whatsapp', data: `data-whatsapp-link="${link}"` });

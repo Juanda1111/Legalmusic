@@ -7,6 +7,7 @@ import { contractService } from '../services/contractService.js';
 import { navigate } from '../router.js';
 import { CONTRACT_TEMPLATES } from '../utils/formTemplates.js';
 import { getSavedContractTemplates, saveContractTemplate } from '../utils/templateStorage.js';
+import { renderEmptyState } from '../components/emptyState.js';
 
 let currentFilter = 'Todos';
 const FILTERS = ['Todos', 'Borrador', 'Firmado', 'En Ejecución', 'Completado', 'Cancelado'];
@@ -41,6 +42,7 @@ function renderFilters() {
 function renderContractList() {
     const state = store.getState();
     const allContracts = state.contracts || [];
+    const allPayments = state.payments || [];
     
     let filteredContracts = allContracts;
     if (currentFilter !== 'Todos') {
@@ -56,15 +58,12 @@ function renderContractList() {
 
     if (filteredContracts.length === 0) {
         return `
-            <div class="empty-state">
-                ${icon('fileText', 48)}
-                <p>No hay contratos en esta categoría</p>
-            </div>
+            ${renderEmptyState({ iconName: 'fileText', title: 'Aún no hay contratos', description: 'Crea tu primer contrato para empezar a organizar clientes y pagos.', actionId: 'btnEmptyNewContract', actionLabel: 'Crear contrato', page: true })}
         `;
     }
 
     return filteredContracts.map(c => {
-        const payments = (store.getState().payments || []).filter(payment => String(payment.contractId) === String(c.id));
+        const payments = allPayments.filter(payment => String(payment.contractId) === String(c.id));
         const nextPayment = contractService.getNextPayment(payments);
         return `
         <div class="compact-card compact-card--highlight status-${c.status}" data-id="${c.id}">
@@ -108,7 +107,7 @@ export function initContractsViewEvents(action) {
         }
 
         // Clic en nuevo contrato
-        if (e.target.closest('#btnNewContractHeader')) {
+        if (e.target.closest('#btnNewContractHeader, #btnEmptyNewContract')) {
             openModal('Nuevo Contrato', renderContractForm());
             bindContractFormEvents();
             return;

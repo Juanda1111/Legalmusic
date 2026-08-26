@@ -5,6 +5,7 @@ import { openConfirmDialog } from '../components/modal.js';
 import { showToast } from '../components/toast.js';
 import { navigate } from '../router.js';
 import { notificationEngine } from '../services/notificationEngine.js';
+import { renderEmptyState } from '../components/emptyState.js';
 
 let currentTab = 'atrasados';
 
@@ -101,10 +102,7 @@ export function renderPaymentsView(action) {
 
   if (listToShow.length === 0) {
     html += `
-      <div class="empty-state">
-        <div class="empty-state__icon">${icon('dollarSign', 48)}</div>
-        <p class="empty-state__text">No hay pagos en esta categoría.</p>
-      </div>
+      ${renderEmptyState({ iconName: 'dollarSign', title: 'No hay pagos aquí', description: 'Cuando agregues contratos con calendario, sus pagos aparecerán en esta sección.' })}
     `;
   } else {
     listToShow.forEach(payment => {
@@ -156,7 +154,7 @@ export function renderPaymentsView(action) {
 function renderNotifications() {
   const notifications = notificationEngine ? notificationEngine.getNotifications() : [];
   if (notifications.length === 0) {
-    return `<p class="text-sm text-gray">No hay alertas activas.</p>`;
+    return renderEmptyState({ iconName: 'bell', title: 'Sin alertas activas', description: 'Los avisos de pagos y eventos aparecerán aquí.', compact: true });
   }
 
   return notifications.map(notif => {

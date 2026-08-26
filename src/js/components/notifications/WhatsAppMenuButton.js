@@ -5,7 +5,7 @@ import { renderActionButton } from './ActionButton.js';
 import { showToast } from '../toast.js';
 import { NOTIFICATION_MESSAGES } from '../../utils/notifications/validators.js';
 
-export const renderWhatsAppMenuButton = ({ phone, options, label = 'Enviar notificación a WhatsApp' }) => {
+export const renderWhatsAppMenuButton = ({ phone, options, label = 'Elegir aviso para enviar por WhatsApp' }) => {
   const validation = validatePhone({ telefono: phone });
   const menu = options.map((option, index) => {
     const link = validation.valid ? buildWhatsAppLink(phone, buildMessage(option.templateKey, option.templateData)) : '';

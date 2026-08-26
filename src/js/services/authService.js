@@ -1,4 +1,4 @@
-import { STORAGE_KEYS, getItem, setItem, removeItem } from '../state/storage.js';
+import { STORAGE_KEYS, getItem, setItem, removeItem, setUserItem } from '../state/storage.js';
 
 export const DEMO_CREDENTIALS = {
   email: 'admin@legalmusic.com',
@@ -22,6 +22,7 @@ class AuthService {
     
     users.push(newUser);
     setItem(STORAGE_KEYS.USERS, users);
+    ['CONTRACTS', 'EVENTS', 'RIDERS', 'PAYMENTS'].forEach(key => setUserItem(STORAGE_KEYS[key], newUser.id, []));
     
     // Auto login
     setItem(STORAGE_KEYS.SESSION, newUser);

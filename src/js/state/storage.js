@@ -35,3 +35,9 @@ export const removeItem = (key) => {
     console.error(`Error al eliminar de localStorage [${key}]:`, error);
   }
 };
+
+export const getUserStorageKey = (key, userId) => `${key}_${userId || 'default'}`;
+
+export const getUserItem = (key, userId) => getItem(getUserStorageKey(key, userId));
+
+export const setUserItem = (key, userId, value) => setItem(getUserStorageKey(key, userId), value);

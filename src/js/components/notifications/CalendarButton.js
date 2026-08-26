@@ -4,7 +4,7 @@ import { renderActionButton } from './ActionButton.js';
 import { renderReminderSelector } from './ReminderSelector.js';
 import { showToast } from '../toast.js';
 
-export const renderCalendarButton = ({ title, description, date, time, durationMinutes = 60, reminderOptions, label = 'Enviar notificación al calendario' }) => {
+export const renderCalendarButton = ({ title, description, date, time, durationMinutes = 60, reminderOptions, label = 'Enviar recordatorio al calendario' }) => {
   const validation = validateEventDate({ date });
   return `<div class="notification-calendar" data-calendar-title="${encodeURIComponent(title)}" data-calendar-description="${encodeURIComponent(description || '')}" data-calendar-date="${date || ''}" data-calendar-time="${time || ''}" data-calendar-duration="${durationMinutes}">${renderReminderSelector(reminderOptions || [], 'reminderOffset')} ${renderActionButton({ label, disabled: !validation.valid, disabledReason: validation.reason || NOTIFICATION_MESSAGES.missingEventDate, className: 'notification-calendar__button' })}</div>`;
 };

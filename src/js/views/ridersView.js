@@ -5,6 +5,7 @@ import { openModal, closeModal } from '../components/modal.js';
 import { showToast } from '../components/toast.js';
 import { navigate } from '../router.js';
 import { RIDER_TEMPLATES } from '../utils/formTemplates.js';
+import { renderEmptyState } from '../components/emptyState.js';
 
 export function renderRidersView() {
   const state = store.getState();
@@ -22,10 +23,7 @@ export function renderRidersView() {
 
   if (eventsWithRiders.length === 0 && eventsWithoutRiders.length === 0) {
     html += `
-      <div class="empty-state">
-        ${icon('headphones', 48)}
-        <p>No hay eventos programados ni riders configurados</p>
-      </div>
+      ${renderEmptyState({ iconName: 'headphones', title: 'Tu espacio técnico está listo', description: 'Crea un evento para añadir su rider técnico y guardar una plantilla de producción.', page: true })}
     `;
   } else {
     // 1. List events that DO have riders
