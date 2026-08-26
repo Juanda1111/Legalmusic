@@ -18,6 +18,7 @@
 @use 'components/forms';
 @use 'components/modals';
 @use 'components/toasts';
+@use 'components/notifications' as notification-actions;
 
 // 5. Views
 @use 'views/auth';

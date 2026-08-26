@@ -1,0 +1,16 @@
+@use '../abstracts/variables' as vars;
+
+.notification-action { min-height: 32px; padding: 0 vars.$space-sm; white-space: nowrap; }
+.notification-reminder { display: inline-flex; align-items: center; gap: 4px; color: vars.$text-secondary; font-size: 10px; }
+.notification-reminder__select { max-width: 100px; padding: 4px; color: vars.$text-primary; background: vars.$surface-elevated; border: 1px solid vars.$border; border-radius: vars.$radius-sm; font-size: 10px; }
+.notification-menu { position: relative; display: inline-block; }
+.notification-menu__items { display: none; position: absolute; right: 0; bottom: calc(100% + 4px); min-width: 180px; padding: 4px; background: vars.$surface-elevated; border: 1px solid vars.$border; border-radius: vars.$radius-md; box-shadow: vars.$shadow-md; z-index: vars.$z-dropdown; }
+.notification-menu.is-open .notification-menu__items { display: grid; gap: 2px; }
+.notification-menu__option { padding: 8px; color: vars.$text-primary; text-align: left; font-size: vars.$font-xs; border-radius: vars.$radius-sm; }
+.notification-menu__option:hover { background: vars.$surface; }
+.notification-calendar { display: inline-flex; align-items: center; gap: 6px; }
+.notification-payment-row { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 8px 12px; align-items: center; padding: 10px 12px; border-bottom: 1px solid vars.$border; }
+.notification-payment-row > div:first-child { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.notification-payment-row > div:first-child span { color: vars.$text-secondary; font-size: vars.$font-xs; }
+.notification-payment-row__actions { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px; }
+@media (max-width: 600px) { .notification-payment-row { grid-template-columns: minmax(0, 1fr) auto; } .notification-payment-row > .badge { grid-column: 1 / -1; justify-self: start; } }

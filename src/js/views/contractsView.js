@@ -152,6 +152,10 @@ function renderContractForm(contract = {}) {
                 <input type="text" class="form-control" name="clientName" value="${contract.clientName || contract.client || ''}" required>
             </div>
             <div class="form-group">
+                <label class="form-label">Teléfono para WhatsApp</label>
+                <input type="tel" class="form-control" name="telefono" value="${contract.telefono || contract.phone || ''}" placeholder="+57 300 123 4567">
+            </div>
+            <div class="form-group">
                 <label class="form-label">Monto</label>
                 <input type="number" class="form-control" name="amount" value="${contract.amount || ''}" required>
             </div>

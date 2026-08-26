@@ -4,6 +4,10 @@ import { formatCurrency, formatDate, isBeforeToday, getStatusLabel, getStatusCla
 import { openModal, closeModal, openBottomSheet } from '../components/modal.js';
 import { showToast } from '../components/toast.js';
 import { navigate } from '../router.js';
+import { renderWhatsAppButton, initWhatsAppButtons } from '../components/notifications/WhatsAppButton.js';
+import { renderCalendarButton, initCalendarButtons } from '../components/notifications/CalendarButton.js';
+import { renderPaymentRow } from '../components/notifications/PaymentRow.js';
+import { REMINDER_OPTIONS_PAGOS } from '../utils/notifications/reminders.js';
 
 export function renderContractDetailView(contractId) {
   const state = store.getState();
@@ -88,6 +92,10 @@ export function renderContractDetailView(contractId) {
               <span>Modalidad <strong>${contract.paymentFrequency || 'No configurada'}</strong></span>
             </div>
 
+            <div class="notification-actions">
+              ${renderWhatsAppButton({ phone: contract.telefono || contract.phone, templateKey: 'pago_recordatorio', templateData: { nombreCliente: contract.clientName || contract.client || 'Cliente', valor: formatCurrency(nextPayment?.amount || 0), fecha: nextPayment ? formatDate(nextPayment.dueDate) : 'la fecha indicada' }, label: 'Enviar recordatorio por WhatsApp' })}
+            </div>
+
             <div style="margin-bottom: 8px;">
               <div style="display:flex;justify-content:space-between;font-size:0.75rem;margin-bottom:4px;">
                 <span>Progreso de Pagos</span>
@@ -104,23 +112,8 @@ export function renderContractDetailView(contractId) {
       <div class="payment-list mb-4">
         ${payments.length > 0 ? payments.map(p => `
           <div class="card card--highlight status-${p.status} mb-2">
-            <div class="card-body" style="display:flex;justify-content:space-between;align-items:center;">
-              <div>
-                <p style="font-weight:600">${p.concept}</p>
-                <p style="font-size:0.75rem;color:var(--text-secondary)">Vence: ${formatDate(p.dueDate)}</p>
-              </div>
-              <div style="text-align:right;">
-                <p style="font-weight:bold;margin-bottom:4px;">${formatCurrency(p.amount)}</p>
-                <span class="badge badge--${getStatusClass(p.status)}">${getStatusLabel(p.status)}</span>
-              </div>
-            </div>
-            ${p.status !== 'pagado' ? `
-            <div class="card-footer" style="padding-top:0;border:none;">
-                <button class="btn btn--primary btn--sm btn--block" id="btnMarkPaid" data-id="${p.id}" data-amount="${p.amount}">
-                    Registrar Pago
-                </button>
-            </div>
-            ` : ''}
+            ${renderPaymentRow({ payment: p, contract })}
+            ${p.status !== 'pagado' ? `<div class="card-footer" style="padding-top:0;border:none;"><button class="btn btn--primary btn--sm btn--block" id="btnMarkPaid" data-id="${p.id}" data-amount="${p.amount}">Registrar Pago</button></div>` : ''}
           </div>
         `).join('') : '<p style="color:var(--text-secondary);text-align:center;padding:24px 0;">No hay pagos registrados</p>'}
       </div>
@@ -144,6 +137,9 @@ export function initContractDetailViewEvents(contractId) {
 
   const container = document.querySelector('.contract-detail');
   if (!container) return;
+
+  initWhatsAppButtons(container);
+  initCalendarButtons(container);
 
   container.addEventListener('click', (e) => {
     // Registrar pago

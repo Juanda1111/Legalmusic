@@ -4,6 +4,9 @@ import { formatDate, getStatusLabel, getStatusClass } from '../utils/formatters.
 import { openModal, closeModal, openConfirmDialog, openBottomSheet } from '../components/modal.js';
 import { showToast } from '../components/toast.js';
 import { navigate } from '../router.js';
+import { renderWhatsAppMenuButton, initWhatsAppMenus } from '../components/notifications/WhatsAppMenuButton.js';
+import { renderCalendarButton, initCalendarButtons } from '../components/notifications/CalendarButton.js';
+import { REMINDER_OPTIONS_EVENTOS } from '../utils/notifications/reminders.js';
 
 export function renderEventsView() {
     const state = store.getState();
@@ -150,6 +153,16 @@ function showEventDetail(event) {
             </div>
             ` : ''}
 
+                        <div class="notification-event-actions">
+                              ${renderCalendarButton({ title: `Evento - ${event.name}`, description: `${event.venue} · Presentación de ${event.artist || event.name}`, date: event.date, time: event.showTime, reminderOptions: REMINDER_OPTIONS_EVENTOS, label: 'Enviar evento al calendario' })}
+                              ${renderCalendarButton({ title: `Prueba de sonido - ${event.artist || event.name}`, description: event.venue, date: event.date, time: event.soundcheckTime, reminderOptions: REMINDER_OPTIONS_EVENTOS, label: 'Enviar prueba al calendario' })}
+                            ${renderWhatsAppMenuButton({ phone: event.telefono || contract?.telefono || contract?.phone, options: [
+                                { label: 'Recordatorio de evento', templateKey: 'evento_recordatorio', templateData: { artista: event.artist || event.name, fecha: formatDate(event.date), lugar: event.venue, horaPruebaSonido: event.soundcheckTime, horaEvento: event.showTime } },
+                                { label: 'Prueba de sonido', templateKey: 'evento_prueba_sonido', templateData: { artista: event.artist || event.name, fecha: formatDate(event.date), lugar: event.venue, horaPruebaSonido: event.soundcheckTime } },
+                                { label: 'Hora de llegada', templateKey: 'evento_llegada', templateData: { artista: event.artist || event.name, fecha: formatDate(event.date), lugar: event.venue, horaLlegada: event.soundcheckTime } }
+                            ] })}
+                        </div>
+
             <div class="form-row">
                 <button class="btn btn--secondary" id="btnEditEvent" data-id="${event.id}" style="flex:1;">
                     ${icon('edit', 16)} Editar
@@ -164,6 +177,12 @@ function showEventDetail(event) {
         title: 'Detalle del Evento',
         content: html
     });
+
+    const detail = document.querySelector('.event-detail-sheet');
+    if (detail) {
+        initCalendarButtons(detail);
+        initWhatsAppMenus(detail);
+    }
 
     document.getElementById('btnEditEvent')?.addEventListener('click', () => {
         closeModal();
@@ -201,6 +220,14 @@ function renderEventForm(event = {}, contracts = []) {
             <div class="form-group">
                 <label class="form-label">Lugar</label>
                 <input type="text" class="form-control" name="venue" value="${event.venue || ''}" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Artista</label>
+                <input type="text" class="form-control" name="artist" value="${event.artist || ''}" placeholder="Nombre del artista o banda">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Teléfono para WhatsApp</label>
+                <input type="tel" class="form-control" name="telefono" value="${event.telefono || event.phone || ''}" placeholder="+57 300 123 4567">
             </div>
             <div class="form-row">
                 <div class="form-group">
