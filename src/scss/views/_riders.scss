@@ -1,0 +1,24 @@
+@use '../abstracts/variables' as vars;
+@use '../abstracts/mixins' as mix;
+
+.riders-view {
+  .rider-category {
+    &__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: vars.$space-sm 0;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      
+      svg {
+        transition: transform vars.$transition-fast;
+        color: vars.$text-secondary;
+      }
+    }
+  }
+
+  // Animaciones y estados para el contenido están manejados 
+  // inline o vía JS, pero dejamos las clases listas para 
+  // cualquier ajuste futuro.
+}
