@@ -1,0 +1,63 @@
+@use '../abstracts/variables' as vars;
+
+.notifications-view {
+  .notifications-list {
+    display: flex;
+    flex-direction: column;
+    gap: vars.$space-md;
+  }
+
+  .notification-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: vars.$space-md;
+    padding: vars.$space-md;
+    border: 1px solid vars.$border;
+    border-left: 4px solid vars.$primary-light;
+    border-radius: vars.$radius-md;
+    background-color: vars.$surface;
+    color: vars.$text-primary;
+    text-align: left;
+
+    &:active {
+      background-color: vars.$surface-elevated;
+      transform: scale(0.99);
+    }
+
+    &--high { border-left-color: vars.$danger; }
+    &--medium { border-left-color: vars.$warning; }
+    &--low { border-left-color: vars.$primary-light; }
+
+    &__icon {
+      display: inline-flex;
+      flex: 0 0 auto;
+      color: vars.$primary-light;
+    }
+
+    &__content {
+      display: flex;
+      flex: 1;
+      min-width: 0;
+      flex-direction: column;
+      gap: 3px;
+
+      strong {
+        font-size: vars.$font-sm;
+      }
+
+      span {
+        color: vars.$text-secondary;
+        font-size: vars.$font-xs;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+
+    > svg {
+      flex: 0 0 auto;
+      color: vars.$text-secondary;
+    }
+  }
+}

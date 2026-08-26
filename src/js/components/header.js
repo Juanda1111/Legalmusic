@@ -39,7 +39,7 @@ export const initHeaderEvents = () => {
   const btnNotifications = document.getElementById('btnNotifications');
   if (btnNotifications) {
     btnNotifications.addEventListener('click', () => {
-      navigate('payments');
+      navigate('notifications');
     });
   }
 };
