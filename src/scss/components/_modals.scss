@@ -1,20 +1,26 @@
 @use '../abstracts/variables' as vars;
 @use '../abstracts/mixins' as mix;
 
-.modal-overlay {
+.modal-wrapper {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
+  inset: 0;
   z-index: vars.$z-modal;
-  @include mix.flex-center;
-  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: vars.$space-lg;
 }
 
-.modal {
+.modal-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(2px);
+}
+
+.modal-container {
+  position: relative;
+  z-index: 1;
   background-color: vars.$surface-elevated;
   border-radius: vars.$radius-lg;
   width: 100%;
@@ -24,35 +30,35 @@
   flex-direction: column;
   box-shadow: vars.$shadow-md;
   animation: modal-enter vars.$transition-base;
-  
-  &-header {
+
+  .modal-header {
     @include mix.flex-between;
     padding: vars.$space-lg;
     border-bottom: 1px solid vars.$border;
-    
-    .title {
-      font-size: vars.$font-lg;
-      font-weight: vars.$weight-semibold;
-    }
-    
-    .close-btn {
-      @include mix.touch-target;
-      width: 32px;
-      min-height: 32px;
-      border-radius: vars.$radius-full;
-      background-color: vars.$surface;
-      color: vars.$text-secondary;
-      font-size: vars.$font-lg;
-    }
   }
-  
-  &-body {
+
+  .modal-title {
+    font-size: vars.$font-lg;
+    font-weight: vars.$weight-semibold;
+  }
+
+  .modal-close-btn {
+    @include mix.touch-target;
+    width: 32px;
+    min-height: 32px;
+    border-radius: vars.$radius-full;
+    background-color: vars.$surface;
+    color: vars.$text-secondary;
+    font-size: vars.$font-lg;
+  }
+
+  .modal-body {
     padding: vars.$space-lg;
     overflow-y: auto;
     @include mix.scrollbar-hidden;
   }
-  
-  &-footer {
+
+  .modal-footer {
     padding: vars.$space-lg;
     border-top: 1px solid vars.$border;
     display: flex;
@@ -62,6 +68,10 @@
       flex: 1;
     }
   }
+}
+
+.modal-closing {
+  animation: modal-exit vars.$transition-base forwards;
 }
 
 .bottom-sheet {
@@ -75,6 +85,11 @@
 @keyframes modal-enter {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes modal-exit {
+  from { opacity: 1; }
+  to { opacity: 0; }
 }
 
 @keyframes bottom-sheet-enter {

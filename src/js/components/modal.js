@@ -2,27 +2,45 @@ import { icon } from './icons.js';
 import { createElement, delegate } from '../utils/dom.js';
 
 let currentModal = null;
+let removeEscapeListener = null;
+
+const normalizeModalOptions = (options, legacyContent) => {
+  if (typeof options === 'string') {
+    return { title: options, content: legacyContent };
+  }
+
+  return options || {};
+};
 
 export const closeModal = () => {
-  if (currentModal && currentModal.parentNode) {
-    currentModal.classList.add('modal-closing');
+  const modalToClose = currentModal;
+
+  if (removeEscapeListener) {
+    removeEscapeListener();
+    removeEscapeListener = null;
+  }
+
+  if (modalToClose && modalToClose.parentNode) {
+    modalToClose.classList.add('modal-closing');
     
     // Enable scroll
     document.body.style.overflow = '';
     
     setTimeout(() => {
-      if (currentModal && currentModal.parentNode) {
-        currentModal.parentNode.removeChild(currentModal);
+      if (modalToClose.parentNode) {
+        modalToClose.parentNode.removeChild(modalToClose);
       }
-      currentModal = null;
+      if (currentModal === modalToClose) {
+        currentModal = null;
+      }
     }, 300); // Wait for transition
   }
 };
 
-export const openModal = (options) => {
+export const openModal = (options, legacyContent) => {
   closeModal(); // Close existing modal if any
 
-  const { title, content, footer, onClose, className = '' } = options;
+  const { title, content, footer, onClose, className = '' } = normalizeModalOptions(options, legacyContent);
 
   const modalHTML = `
     <div class="modal-overlay"></div>
@@ -70,22 +88,29 @@ export const openModal = (options) => {
   const handleEscape = (e) => {
     if (e.key === 'Escape') {
       handleClose();
-      document.removeEventListener('keydown', handleEscape);
     }
   };
   document.addEventListener('keydown', handleEscape);
+  removeEscapeListener = () => document.removeEventListener('keydown', handleEscape);
 
   return modalWrapper;
 };
 
-export const openConfirmDialog = (options) => {
-  const { title, message, confirmText = 'Confirmar', cancelText = 'Cancelar', onConfirm, variant = 'primary' } = options;
+export const openConfirmDialog = (options, legacyMessage, legacyOnConfirm) => {
+  const config = typeof options === 'string'
+    ? {
+        title: options,
+        message: typeof legacyMessage === 'string' ? legacyMessage : '¿Deseas continuar?',
+        onConfirm: typeof legacyMessage === 'function' ? legacyMessage : legacyOnConfirm
+      }
+    : options || {};
+  const { title, message, confirmText = 'Confirmar', cancelText = 'Cancelar', onConfirm, variant = 'primary' } = config;
   
   const content = `<p>${message}</p>`;
   
   const footer = `
-    <button class="btn btn-outline btn-cancel">${cancelText}</button>
-    <button class="btn btn-${variant} btn-confirm">${confirmText}</button>
+    <button class="btn btn--secondary btn-cancel">${cancelText}</button>
+    <button class="btn btn--${variant} btn-confirm">${confirmText}</button>
   `;
 
   const modal = openModal({
