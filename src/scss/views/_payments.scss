@@ -7,62 +7,102 @@
     background: linear-gradient(135deg, vars.$surface-elevated 0%, vars.$surface 100%);
     border: 1px solid rgba(vars.$primary, 0.3);
     margin-bottom: vars.$space-xl;
-    text-align: center;
-    
-    .label {
-      font-size: vars.$font-sm;
-      color: vars.$text-secondary;
-      margin-bottom: vars.$space-xs;
-    }
-    
-    .total-amount {
-      font-size: vars.$font-3xl;
-      font-weight: vars.$weight-bold;
-      color: vars.$primary-light;
-      margin-bottom: vars.$space-lg;
-    }
-    
-    .stats-row {
-      display: flex;
-      border-top: 1px solid vars.$border;
-      padding-top: vars.$space-md;
-      
-      .stat {
-        flex: 1;
-        
-        &:first-child {
-          border-right: 1px solid vars.$border;
-        }
-        
-        .stat-val {
-          font-weight: vars.$weight-bold;
-          font-size: vars.$font-lg;
-          
-          &.success { color: vars.$success; }
-          &.warning { color: vars.$warning; }
-        }
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: vars.$space-sm;
+
+    &__item {
+      min-width: 0;
+      text-align: center;
+
+      span {
+        display: block;
+        font-size: vars.$font-xs;
+        margin-bottom: vars.$space-xs;
+      }
+
+      h3 {
+        color: vars.$text-primary;
+        font-size: vars.$font-sm;
+        font-weight: vars.$weight-bold;
+        overflow-wrap: anywhere;
+      }
+
+      &:not(:last-child) {
+        border-right: 1px solid vars.$border;
       }
     }
   }
-  
+
+  .notifications-section {
+    h3 {
+      display: flex;
+      align-items: center;
+      gap: vars.$space-sm;
+      font-size: vars.$font-base;
+    }
+  }
+
+  .notification-list {
+    display: flex;
+    flex-direction: column;
+    gap: vars.$space-sm;
+  }
+
+  .notification-card {
+    display: flex;
+    align-items: center;
+    gap: vars.$space-sm;
+    padding: vars.$space-sm vars.$space-md;
+    background-color: vars.$surface;
+    border: 1px solid vars.$border;
+    border-radius: vars.$radius-md;
+
+    &__indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: vars.$radius-full;
+      flex: 0 0 auto;
+      background-color: vars.$text-secondary;
+    }
+
+    &__message {
+      font-size: vars.$font-sm;
+      font-weight: vars.$weight-semibold;
+    }
+
+    &__amount {
+      margin-top: 2px;
+      font-size: vars.$font-xs;
+      color: vars.$text-secondary;
+    }
+
+    &--high .notification-card__indicator { background-color: vars.$danger; }
+    &--medium .notification-card__indicator { background-color: vars.$warning; }
+    &--low .notification-card__indicator { background-color: vars.$primary-light; }
+  }
+
   .payment-tabs {
     display: flex;
     background-color: vars.$surface-elevated;
     border-radius: vars.$radius-md;
     padding: 4px;
-    margin-bottom: vars.$space-lg;
-    
-    .tab {
+    gap: 2px;
+
+    .payment-tab {
       flex: 1;
-      text-align: center;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: 4px;
       padding: vars.$space-sm 0;
       border-radius: vars.$radius-md;
-      font-size: vars.$font-sm;
+      font-size: vars.$font-xs;
       font-weight: vars.$weight-medium;
       color: vars.$text-secondary;
       @include mix.touch-target;
       min-height: 36px;
-      
+
       &.active {
         background-color: vars.$surface;
         color: vars.$text-primary;
@@ -70,26 +110,33 @@
       }
     }
   }
-  
+
   .payment-card {
-    .amount-row {
-      @include mix.flex-between;
-      margin: vars.$space-sm 0;
-      
-      .amount {
-        font-size: vars.$font-xl;
-        font-weight: vars.$weight-bold;
-      }
+    border-left: 4px solid vars.$warning;
+
+    &--danger { border-left-color: vars.$danger; }
+    &--success { border-left-color: vars.$success; }
+
+    h4 {
+      margin-top: vars.$space-xs;
+      font-size: vars.$font-base;
+    }
+
+    .payment-amount {
+      margin-top: vars.$space-sm;
+      font-size: vars.$font-xl;
+      font-weight: vars.$weight-bold;
+      color: vars.$text-primary;
     }
   }
-  
+
   .payment-progress {
     height: 6px;
     background-color: vars.$surface-elevated;
     border-radius: vars.$radius-full;
     margin-top: vars.$space-md;
     overflow: hidden;
-    
+
     .bar {
       height: 100%;
       background-color: vars.$success;

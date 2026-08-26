@@ -70,10 +70,12 @@ export const getViewParam = () => {
 
 // Navegar a una vista
 export const navigate = (viewId, param) => {
-  if (param) {
-    window.location.hash = `#${viewId}:${param}`;
+  const nextHash = param ? `#${viewId}:${param}` : `#${viewId}`;
+
+  if (window.location.hash === nextHash) {
+    renderView(viewId);
   } else {
-    window.location.hash = `#${viewId}`;
+    window.location.hash = nextHash;
   }
 };
 

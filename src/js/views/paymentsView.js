@@ -27,45 +27,46 @@ export function renderPaymentsView() {
   }
 
   let html = `
-    <div class="view-header">
-      <h1 class="view-title">Pagos</h1>
-    </div>
-
-    <div class="payments-summary card mb-4">
-      <div class="payments-summary__item">
-        <span class="text-warning">Por cobrar</span>
-        <h3>${formatCurrency(totalPending)}</h3>
+    <div class="payments-view">
+      <div class="view-header">
+        <h1 class="view-title">Pagos</h1>
       </div>
-      <div class="payments-summary__item">
-        <span class="text-success">Cobrado</span>
-        <h3>${formatCurrency(totalPaid)}</h3>
-      </div>
-      <div class="payments-summary__item">
-        <span class="text-danger">Atrasado</span>
-        <h3>${formatCurrency(totalOverdue)}</h3>
-      </div>
-    </div>
 
-    <div class="notifications-section mb-4">
-      <h3 class="mb-2">${icon('bell', 20)} Alertas Activas</h3>
-      <div class="notification-list">
-        ${renderNotifications()}
+      <div class="payments-summary card mb-4">
+        <div class="payments-summary__item">
+          <span class="text-warning">Por cobrar</span>
+          <h3>${formatCurrency(totalPending)}</h3>
+        </div>
+        <div class="payments-summary__item">
+          <span class="text-success">Cobrado</span>
+          <h3>${formatCurrency(totalPaid)}</h3>
+        </div>
+        <div class="payments-summary__item">
+          <span class="text-danger">Atrasado</span>
+          <h3>${formatCurrency(totalOverdue)}</h3>
+        </div>
       </div>
-    </div>
 
-    <div class="payment-tabs mb-4">
-      <button class="payment-tab ${currentTab === 'atrasados' ? 'active' : ''}" data-tab="atrasados">
-        Atrasados <span class="badge badge--danger">${overdue.length}</span>
-      </button>
-      <button class="payment-tab ${currentTab === 'pendientes' ? 'active' : ''}" data-tab="pendientes">
-        Pendientes <span class="badge badge--warning">${pending.length}</span>
-      </button>
-      <button class="payment-tab ${currentTab === 'pagados' ? 'active' : ''}" data-tab="pagados">
-        Pagados <span class="badge badge--success">${paid.length}</span>
-      </button>
-    </div>
+      <section class="notifications-section mb-4">
+        <h3 class="mb-2">${icon('bell', 20)} Alertas Activas</h3>
+        <div class="notification-list">
+          ${renderNotifications()}
+        </div>
+      </section>
 
-    <div class="payments-list">
+      <div class="payment-tabs mb-4">
+        <button class="payment-tab ${currentTab === 'atrasados' ? 'active' : ''}" data-tab="atrasados">
+          Atrasados <span class="badge badge--danger">${overdue.length}</span>
+        </button>
+        <button class="payment-tab ${currentTab === 'pendientes' ? 'active' : ''}" data-tab="pendientes">
+          Pendientes <span class="badge badge--warning">${pending.length}</span>
+        </button>
+        <button class="payment-tab ${currentTab === 'pagados' ? 'active' : ''}" data-tab="pagados">
+          Pagados <span class="badge badge--success">${paid.length}</span>
+        </button>
+      </div>
+
+      <div class="payments-list">
   `;
 
   let listToShow = [];
@@ -112,23 +113,25 @@ export function renderPaymentsView() {
     });
   }
 
-  html += `</div>`;
+  html += `</div></div>`;
   return html;
 }
 
 function renderNotifications() {
-  const notifications = notificationEngine ? notificationEngine.getActiveNotifications() : [];
+  const notifications = notificationEngine ? notificationEngine.getNotifications() : [];
   if (notifications.length === 0) {
     return `<p class="text-sm text-gray">No hay alertas activas.</p>`;
   }
 
   return notifications.map(notif => {
-    const dotColor = notif.priority === 'high' ? 'bg-danger' : notif.priority === 'medium' ? 'bg-warning' : 'bg-info';
+    const priorityClass = notif.priority === 'high' ? 'notification-card--high' :
+      notif.priority === 'medium' ? 'notification-card--medium' : 'notification-card--low';
     return `
-      <div class="notification-card card mb-2 p-3">
-        <div class="flex items-center gap-2">
-          <span class="priority-dot ${dotColor} w-2 h-2 rounded-full inline-block"></span>
-          <p class="text-sm"><strong>${notif.message}</strong></p>
+      <div class="notification-card ${priorityClass}">
+        <div class="notification-card__indicator"></div>
+        <div>
+          <p class="notification-card__message">${notif.message}</p>
+          <p class="notification-card__amount">${formatCurrency(notif.amount)}</p>
         </div>
       </div>
     `;
@@ -142,7 +145,7 @@ export function initPaymentsViewEvents() {
       const tab = e.target.closest('.payment-tab');
       if (tab) {
         currentTab = tab.dataset.tab;
-        navigate('/payments'); // Re-render view
+        navigate('payments');
       }
     });
   }
@@ -165,7 +168,7 @@ export function initPaymentsViewEvents() {
               paidDate: new Date().toISOString().split('T')[0]
             });
             showToast({ message: 'Pago registrado exitosamente', type: 'success' });
-            navigate('/payments');
+            navigate('payments');
           }
         );
       }
