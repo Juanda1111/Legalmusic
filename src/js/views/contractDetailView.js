@@ -51,7 +51,7 @@ export function renderContractDetailView(contractId) {
       <div class="card mb-4">
         <div class="card-body">
             <h4 style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">${icon('user', 18)} Cliente</h4>
-            <p><strong>${contract.clientName || 'No especificado'}</strong></p>
+            <p><strong>${contract.clientName || contract.client || 'No especificado'}</strong></p>
             ${contract.description ? `<p style="margin-top:8px;font-size:0.875rem;color:var(--text-secondary)">${contract.description}</p>` : ''}
         </div>
       </div>

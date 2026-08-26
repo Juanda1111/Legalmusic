@@ -78,8 +78,8 @@ function renderContractList() {
                 <span class="badge badge--${getStatusClass(c.status)}">${getStatusLabel(c.status)}</span>
             </div>
             <div class="compact-card__body">
-                <div class="detail-row">
-                    ${icon('user', 14)} <span>${c.clientName}</span>
+                        <div class="detail-row">
+                            ${icon('user', 14)} <span>${c.clientName || c.client || 'Cliente sin especificar'}</span>
                 </div>
                 <div class="detail-row">
                     ${icon('calendar', 14)} <span>${formatDate(c.startDate)}</span>
@@ -126,8 +126,8 @@ export function initContractsViewEvents() {
         // Clic en tarjeta de contrato
         const card = e.target.closest('.compact-card');
         if (card) {
-            const id = parseInt(card.dataset.id, 10);
-            const contract = store.getState().contracts.find(c => c.id === id);
+            const id = card.dataset.id;
+            const contract = store.getState().contracts.find(c => String(c.id) === id);
             if (contract) {
                 showContractDetail(contract);
             }
@@ -155,7 +155,7 @@ function renderContractForm(contract = {}) {
             </div>
             <div class="form-group">
                 <label class="form-label">Cliente</label>
-                <input type="text" class="form-control" name="clientName" value="${contract.clientName || ''}" required>
+                <input type="text" class="form-control" name="clientName" value="${contract.clientName || contract.client || ''}" required>
             </div>
             <div class="form-group">
                 <label class="form-label">Monto</label>
@@ -200,8 +200,10 @@ function bindContractFormEvents() {
             contractData.amount = parseFloat(contractData.amount);
             
             if (contractData.id) {
-                contractData.id = parseInt(contractData.id, 10);
-                store.updateContract(contractData.id, contractData);
+                const existingContract = store.getState().contracts.find(contract => String(contract.id) === contractData.id);
+                if (!existingContract) return;
+                contractData.id = existingContract.id;
+                store.updateContract(existingContract.id, contractData);
                 showToast({ message: 'Contrato actualizado', type: 'success' });
             } else {
                 contractData.id = Date.now();
