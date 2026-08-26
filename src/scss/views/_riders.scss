@@ -2,6 +2,8 @@
 @use '../abstracts/mixins' as mix;
 
 .riders-view {
+  max-width: 1080px;
+
   .rider-category {
     &__header {
       display: flex;

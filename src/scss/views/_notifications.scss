@@ -1,6 +1,8 @@
 @use '../abstracts/variables' as vars;
 
 .notifications-view {
+  max-width: 1080px;
+
   .notifications-list {
     display: flex;
     flex-direction: column;

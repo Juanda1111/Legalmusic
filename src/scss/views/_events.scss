@@ -2,6 +2,8 @@
 @use '../abstracts/mixins' as mix;
 
 .events-view {
+  max-width: 1080px;
+
   .event-list {
     display: flex;
     flex-direction: column;
