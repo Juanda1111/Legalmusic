@@ -50,6 +50,36 @@
   }
 }
 
+.contract-financial-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: vars.$space-sm;
+  margin-bottom: vars.$space-md;
+  padding: vars.$space-md 0;
+  border-top: 1px solid vars.$border;
+  border-bottom: 1px solid vars.$border;
+
+  span {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    color: vars.$text-secondary;
+    font-size: vars.$font-xs;
+
+    strong {
+      color: vars.$text-primary;
+      font-size: vars.$font-sm;
+      overflow-wrap: anywhere;
+    }
+  }
+}
+
+@media (max-width: 380px) {
+  .contract-financial-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 899px) {
   .contracts-view .contract-list {
     display: flex;

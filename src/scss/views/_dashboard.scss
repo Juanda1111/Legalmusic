@@ -157,6 +157,44 @@
   margin-bottom: vars.$space-md;
 }
 
+.dash-section__heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: vars.$space-sm;
+}
+
+.dash-contract-card {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: vars.$space-md;
+  padding: vars.$space-md;
+  margin-bottom: vars.$space-sm;
+  background: vars.$surface;
+  border: 1px solid vars.$border;
+  border-radius: vars.$radius-md;
+  color: vars.$text-primary;
+  text-align: left;
+
+  &__main, &__payment {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  &__main { flex: 1; }
+  &__payment { align-items: flex-end; flex: 0 0 auto; }
+
+  strong { font-size: vars.$font-sm; }
+  span { color: vars.$text-secondary; font-size: vars.$font-xs; }
+  &__payment strong { color: vars.$success; }
+
+  &:active { background: vars.$surface-elevated; }
+}
+
 .dash-section__empty {
   font-size: vars.$font-sm;
   color: vars.$text-secondary;
@@ -277,6 +315,7 @@
 
   .dash-section--events { grid-column: span 7; }
   .dash-section--payments { grid-column: span 5; }
+  .dash-section--contracts { grid-column: 1 / -1; }
 
   .fab {
     right: max(32px, calc((100vw - 1280px) / 2));

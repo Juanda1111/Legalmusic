@@ -1,4 +1,5 @@
 import { STORAGE_KEYS, getItem, setItem } from './storage.js';
+import { contractService } from '../services/contractService.js';
 
 // Simple Pub/Sub State Store
 class Store {
@@ -65,12 +66,32 @@ class Store {
     const contracts = [...this.state.contracts, contract];
     this.setState('contracts', contracts);
     setItem(STORAGE_KEYS.CONTRACTS, contracts);
+
+    const generatedPayments = contractService.generatePaymentSchedule(contract);
+    if (generatedPayments.length > 0) {
+      const payments = [...this.state.payments, ...generatedPayments];
+      this.setState('payments', payments);
+      setItem(STORAGE_KEYS.PAYMENTS, payments);
+    }
   }
 
   updateContract(id, updates) {
     const contracts = this.state.contracts.map(c => String(c.id) === String(id) ? { ...c, ...updates } : c);
     this.setState('contracts', contracts);
     setItem(STORAGE_KEYS.CONTRACTS, contracts);
+
+    const updatedContract = contracts.find(contract => String(contract.id) === String(id));
+    if (!updatedContract || !('paymentFrequency' in updates || 'startDate' in updates || 'endDate' in updates || 'installmentValue' in updates || 'paymentDay' in updates || 'customDays' in updates)) return;
+
+    const currentPayments = this.state.payments.filter(payment => String(payment.contractId) !== String(id));
+    const previousPayments = this.state.payments.filter(payment => String(payment.contractId) === String(id));
+    const generatedPayments = contractService.generatePaymentSchedule(updatedContract).map(payment => {
+      const previous = previousPayments.find(item => item.dueDate === payment.dueDate);
+      return previous ? { ...payment, id: previous.id, status: previous.status, paidDate: previous.paidDate, notes: previous.notes } : payment;
+    });
+    const payments = [...currentPayments, ...generatedPayments, ...previousPayments.filter(payment => payment.status === 'pagado' && !generatedPayments.some(item => item.id === payment.id))];
+    this.setState('payments', payments);
+    setItem(STORAGE_KEYS.PAYMENTS, payments);
   }
 
   addEvent(eventData) {
@@ -108,6 +129,27 @@ class Store {
   updatePayment(id, updates) {
     const payments = this.state.payments.map(p => String(p.id) === String(id) ? { ...p, ...updates } : p);
     this.setState('payments', payments);
+    setItem(STORAGE_KEYS.PAYMENTS, payments);
+  }
+
+  syncPaymentStatuses() {
+    const today = new Date();
+    const payments = this.state.payments.map(payment => {
+      if (payment.status === 'pendiente' && contractService.parseDate(payment.dueDate) < new Date(today.getFullYear(), today.getMonth(), today.getDate())) {
+        return { ...payment, status: 'atrasado' };
+      }
+      return payment;
+    });
+    this.setState('payments', payments);
+    setItem(STORAGE_KEYS.PAYMENTS, payments);
+  }
+
+  deleteContract(id) {
+    const contracts = this.state.contracts.filter(contract => String(contract.id) !== String(id));
+    const payments = this.state.payments.filter(payment => String(payment.contractId) !== String(id));
+    this.setState('contracts', contracts);
+    this.setState('payments', payments);
+    setItem(STORAGE_KEYS.CONTRACTS, contracts);
     setItem(STORAGE_KEYS.PAYMENTS, payments);
   }
 }

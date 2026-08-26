@@ -115,6 +115,7 @@ export const renderView = (viewId) => {
     const user = authService.getCurrentUser();
 
     // Actualizar notificaciones
+    store.syncPaymentStatuses();
     const payments = store.getState().payments;
     notificationEngine.checkPayments(payments);
     const notifCount = notificationEngine.getNotificationCount();

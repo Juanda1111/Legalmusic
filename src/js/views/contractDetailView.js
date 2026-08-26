@@ -1,14 +1,17 @@
 import { icon } from '../components/icons.js';
 import { store } from '../state/store.js';
-import { formatCurrency, formatDate, getStatusLabel, getStatusClass } from '../utils/formatters.js';
-import { openConfirmDialog, openBottomSheet } from '../components/modal.js';
+import { formatCurrency, formatDate, isBeforeToday, getStatusLabel, getStatusClass } from '../utils/formatters.js';
+import { openModal, closeModal, openBottomSheet } from '../components/modal.js';
 import { showToast } from '../components/toast.js';
 import { navigate } from '../router.js';
 
 export function renderContractDetailView(contractId) {
   const state = store.getState();
   const contract = state.contracts.find(c => c.id == contractId);
-  const payments = state.payments ? state.payments.filter(p => p.contractId == contractId) : [];
+  const payments = state.payments ? state.payments.filter(p => String(p.contractId) === String(contractId)).map(payment => ({
+    ...payment,
+    status: payment.status === 'pendiente' && isBeforeToday(payment.dueDate) ? 'atrasado' : payment.status
+  })) : [];
 
   if (!contract) {
     return `
@@ -29,6 +32,8 @@ export function renderContractDetailView(contractId) {
   
   const pendingAmount = totalAmount - paidAmount;
   const progressPercent = totalAmount > 0 ? Math.min(100, Math.round((paidAmount / totalAmount) * 100)) : 0;
+  const nextPayment = payments.find(payment => payment.status !== 'pagado');
+  const paidCount = payments.filter(payment => payment.status === 'pagado').length;
 
   return `
     <div class="contract-detail">
@@ -86,6 +91,13 @@ export function renderContractDetailView(contractId) {
               <strong style="color:var(--warning)">${formatCurrency(Math.max(0, pendingAmount))}</strong>
             </div>
 
+            <div class="contract-financial-grid">
+              <span>Cuotas pagadas <strong>${paidCount}</strong></span>
+              <span>Cuotas pendientes <strong>${payments.length - paidCount}</strong></span>
+              <span>Próximo pago <strong>${nextPayment ? `${formatCurrency(nextPayment.amount)} · ${formatDate(nextPayment.dueDate)}` : 'Sin pagos'}</strong></span>
+              <span>Modalidad <strong>${contract.paymentFrequency || 'No configurada'}</strong></span>
+            </div>
+
             <div style="margin-bottom: 8px;">
               <div style="display:flex;justify-content:space-between;font-size:0.75rem;margin-bottom:4px;">
                 <span>Progreso de Pagos</span>
@@ -98,7 +110,7 @@ export function renderContractDetailView(contractId) {
         </div>
       </div>
 
-      <h4 style="margin-bottom:12px;font-size:1.1rem;">Pagos Programados</h4>
+      <h4 style="margin-bottom:12px;font-size:1.1rem;">Calendario e historial de pagos</h4>
       <div class="payment-list mb-4">
         ${payments.length > 0 ? payments.map(p => `
           <div class="card card--highlight status-${p.status} mb-2">
@@ -127,6 +139,9 @@ export function renderContractDetailView(contractId) {
         <button class="btn btn--secondary" id="btnChangeStatus" data-id="${contract.id}" style="flex:1;">
           Cambiar Estado
         </button>
+        <button class="btn btn--danger" id="btnDeleteContract" data-id="${contract.id}" style="flex:1;">
+          Eliminar contrato
+        </button>
       </div>
     </div>
   `;
@@ -149,11 +164,7 @@ export function initContractDetailViewEvents(contractId) {
     if (btnPayment) {
       const pid = btnPayment.dataset.id;
       const amount = btnPayment.dataset.amount;
-      openConfirmDialog('Registrar Pago', `¿Confirmar recepción de ${formatCurrency(amount)}?`, () => {
-        store.updatePayment(pid, { status: 'pagado', paidDate: new Date().toISOString().split('T')[0] });
-        showToast({ message: 'Pago registrado', type: 'success' });
-        navigate('contract-detail', contractId);
-      });
+      openPaymentModal(pid, amount, contractId);
       return;
     }
 
@@ -175,6 +186,54 @@ export function initContractDetailViewEvents(contractId) {
       });
       return;
     }
+
+    const btnDelete = e.target.closest('#btnDeleteContract');
+    if (btnDelete) {
+      openConfirmDialog('Eliminar contrato', 'Se eliminarán también sus pagos programados. ¿Deseas continuar?', () => {
+        store.deleteContract(btnDelete.dataset.id);
+        showToast({ message: 'Contrato eliminado', type: 'success' });
+        navigate('contracts');
+      });
+    }
+  });
+}
+
+function openPaymentModal(paymentId, amount, contractId) {
+  const today = new Date();
+  const paidDate = [today.getFullYear(), String(today.getMonth() + 1).padStart(2, '0'), String(today.getDate()).padStart(2, '0')].join('-');
+  const modal = openModal({
+    title: 'Registrar pago',
+    content: `
+      <form id="paymentForm" class="standard-form">
+        <div class="form-group">
+          <label class="form-label">Valor pagado</label>
+          <input class="form-control" type="number" name="amount" value="${amount}" min="0" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Fecha real del pago</label>
+          <input class="form-control" type="date" name="paidDate" value="${paidDate}" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Observación</label>
+          <textarea class="form-control form-textarea" name="notes" placeholder="Opcional"></textarea>
+        </div>
+        <button class="btn btn--primary btn--block" type="submit">Marcar como pagado</button>
+      </form>
+    `
+  });
+
+  modal.querySelector('#paymentForm').addEventListener('submit', event => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    store.updatePayment(paymentId, {
+      amount: Number(data.get('amount')),
+      paidDate: data.get('paidDate'),
+      notes: data.get('notes'),
+      status: 'pagado'
+    });
+    closeModal();
+    showToast({ message: 'Pago registrado', type: 'success' });
+    setTimeout(() => navigate('contract-detail', contractId), 300);
   });
 }
 

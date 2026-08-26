@@ -71,7 +71,10 @@ function renderContractList() {
         `;
     }
 
-    return filteredContracts.map(c => `
+    return filteredContracts.map(c => {
+        const payments = (store.getState().payments || []).filter(payment => String(payment.contractId) === String(c.id));
+        const nextPayment = contractService.getNextPayment(payments);
+        return `
         <div class="compact-card compact-card--highlight status-${c.status}" data-id="${c.id}">
             <div class="compact-card__header">
                 <strong>${c.title}</strong>
@@ -84,13 +87,15 @@ function renderContractList() {
                 <div class="detail-row">
                     ${icon('calendar', 14)} <span>${formatDate(c.startDate)}</span>
                 </div>
+                ${nextPayment ? `<div class="detail-row"><span>Próximo pago: ${formatDate(nextPayment.dueDate)} · ${formatCurrency(nextPayment.amount)}</span></div>` : ''}
             </div>
             <div class="compact-card__footer">
                 <span class="badge badge--type">${c.type}</span>
                 <span class="amount">${formatCurrency(c.amount)}</span>
             </div>
         </div>
-    `).join('');
+    `;
+    }).join('');
 }
 
 export function initContractsViewEvents(action) {
@@ -166,6 +171,35 @@ function renderContractForm(contract = {}) {
                 <label class="form-label">Monto</label>
                 <input type="number" class="form-control" name="amount" value="${contract.amount || ''}" required>
             </div>
+            <div class="form-group">
+                <label class="form-label">Modalidad de pago</label>
+                <select class="form-control form-select" name="paymentFrequency">
+                    <option value="">Sin calendario</option>
+                    <option value="unico" ${contract.paymentFrequency === 'unico' ? 'selected' : ''}>Único pago</option>
+                    <option value="diario" ${contract.paymentFrequency === 'diario' ? 'selected' : ''}>Diario</option>
+                    <option value="semanal" ${contract.paymentFrequency === 'semanal' ? 'selected' : ''}>Semanal</option>
+                    <option value="quincenal" ${contract.paymentFrequency === 'quincenal' ? 'selected' : ''}>Quincenal</option>
+                    <option value="mensual" ${contract.paymentFrequency === 'mensual' ? 'selected' : ''}>Mensual</option>
+                    <option value="trimestral" ${contract.paymentFrequency === 'trimestral' ? 'selected' : ''}>Trimestral</option>
+                    <option value="semestral" ${contract.paymentFrequency === 'semestral' ? 'selected' : ''}>Semestral</option>
+                    <option value="anual" ${contract.paymentFrequency === 'anual' ? 'selected' : ''}>Anual</option>
+                    <option value="personalizado" ${contract.paymentFrequency === 'personalizado' ? 'selected' : ''}>Personalizado</option>
+                </select>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Valor de cuota</label>
+                    <input type="number" class="form-control" name="installmentValue" value="${contract.installmentValue || ''}">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Día de pago</label>
+                    <input type="number" class="form-control" name="paymentDay" min="1" max="31" value="${contract.paymentDay || ''}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Días personalizados</label>
+                <input type="number" class="form-control" name="customDays" min="1" value="${contract.customDays || ''}">
+            </div>
             <div class="form-row">
                 <div class="form-group">
                     <label class="form-label">Fecha inicio</label>
@@ -203,6 +237,9 @@ function bindContractFormEvents() {
             const formData = new FormData(form);
             const contractData = Object.fromEntries(formData.entries());
             contractData.amount = parseFloat(contractData.amount);
+            if (contractData.installmentValue) contractData.installmentValue = parseFloat(contractData.installmentValue);
+            if (contractData.paymentDay) contractData.paymentDay = parseInt(contractData.paymentDay, 10);
+            if (contractData.customDays) contractData.customDays = parseInt(contractData.customDays, 10);
             
             if (contractData.id) {
                 const existingContract = store.getState().contracts.find(contract => String(contract.id) === contractData.id);

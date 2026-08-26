@@ -1,4 +1,80 @@
 class ContractService {
+  getPaymentFrequencyLabel(frequency) {
+    const labels = {
+      unico: 'Único pago',
+      diario: 'Diario',
+      semanal: 'Semanal',
+      quincenal: 'Quincenal',
+      mensual: 'Mensual',
+      trimestral: 'Trimestral',
+      semestral: 'Semestral',
+      anual: 'Anual',
+      personalizado: 'Personalizado'
+    };
+    return labels[frequency] || 'Sin calendario';
+  }
+
+  generatePaymentSchedule(contract) {
+    if (!contract.paymentFrequency || !contract.startDate || !contract.endDate) return [];
+
+    const start = this.parseDate(contract.startDate);
+    const end = this.parseDate(contract.endDate);
+    const amount = Number(contract.installmentValue || contract.amount || 0);
+    const frequency = contract.paymentFrequency;
+    const schedule = [];
+    let current = start;
+    let index = 1;
+
+    while (current <= end && index <= 500) {
+      schedule.push({
+        id: `${contract.id}-payment-${index}`,
+        contractId: contract.id,
+        concept: frequency === 'unico' ? 'Pago único' : `Cuota ${index}`,
+        amount: index === 1 && frequency !== 'unico' && contract.firstInstallmentValue
+          ? Number(contract.firstInstallmentValue)
+          : amount,
+        dueDate: this.toDateString(current),
+        status: 'pendiente',
+        paidDate: null,
+        notes: ''
+      });
+
+      if (frequency === 'unico') break;
+      current = this.addFrequency(current, frequency, Number(contract.customDays) || 1, contract.paymentDay);
+      index += 1;
+    }
+
+    return schedule;
+  }
+
+  getNextPayment(payments) {
+    return [...payments]
+      .filter(payment => payment.status !== 'pagado')
+      .sort((a, b) => this.parseDate(a.dueDate) - this.parseDate(b.dueDate))[0] || null;
+  }
+
+  parseDate(dateString) {
+    const [year, month, day] = dateString.split('-').map(Number);
+    return new Date(year, month - 1, day);
+  }
+
+  toDateString(date) {
+    return [date.getFullYear(), String(date.getMonth() + 1).padStart(2, '0'), String(date.getDate()).padStart(2, '0')].join('-');
+  }
+
+  addFrequency(date, frequency, customDays, paymentDay) {
+    if (frequency === 'diario') return new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1);
+    if (frequency === 'semanal') return new Date(date.getFullYear(), date.getMonth(), date.getDate() + 7);
+    if (frequency === 'quincenal') return new Date(date.getFullYear(), date.getMonth(), date.getDate() + 15);
+    if (frequency === 'personalizado') return new Date(date.getFullYear(), date.getMonth(), date.getDate() + customDays);
+
+    const months = { mensual: 1, trimestral: 3, semestral: 6, anual: 12 }[frequency] || 1;
+    const targetDay = Number(paymentDay) || date.getDate();
+    const nextMonth = date.getMonth() + months;
+    const lastDay = new Date(date.getFullYear(), nextMonth + 1, 0).getDate();
+    return new Date(date.getFullYear(), nextMonth, Math.min(targetDay, lastDay));
+  }
+
   getContractBalance(contract, payments) {
     const contractPayments = payments.filter(p => p.contractId === contract.id);
     const paidAmount = contractPayments

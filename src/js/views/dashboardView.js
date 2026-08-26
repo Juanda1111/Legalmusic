@@ -4,6 +4,7 @@ import { formatCurrency, formatDate, parseDate, isBeforeToday, getStatusLabel, g
 import { openBottomSheet, closeModal } from '../components/modal.js';
 import { navigate } from '../router.js';
 import { authService } from '../services/authService.js';
+import { contractService } from '../services/contractService.js';
 
 export function renderDashboardView() {
     const state = store.getState();
@@ -40,6 +41,15 @@ export function renderDashboardView() {
         .filter(p => p.status === 'pagado')
         .sort((a, b) => new Date(b.paidDate) - new Date(a.paidDate))
         .slice(0, 3);
+
+    const contractHighlights = contracts
+        .map(contract => ({
+            contract,
+            nextPayment: contractService.getNextPayment(payments.filter(payment => String(payment.contractId) === String(contract.id)))
+        }))
+        .filter(item => item.nextPayment)
+        .sort((a, b) => contractService.parseDate(a.nextPayment.dueDate) - contractService.parseDate(b.nextPayment.dueDate))
+        .slice(0, 4);
 
     return `
         <div class="dashboard-view">
@@ -110,6 +120,27 @@ export function renderDashboardView() {
                 `).join('')}
             </section>
 
+            <section class="dash-section dash-section--contracts">
+                <div class="dash-section__heading">
+                    <h3 class="dash-section__title">Contratos y próximos pagos</h3>
+                    <button class="btn btn--ghost btn--sm" id="btnViewContracts">Ver todos</button>
+                </div>
+                ${contractHighlights.length === 0
+                    ? '<p class="dash-section__empty">No hay pagos programados</p>'
+                    : contractHighlights.map(({ contract, nextPayment }) => `
+                    <button class="dash-contract-card" data-contract-id="${contract.id}">
+                        <span class="dash-contract-card__main">
+                            <strong>${contract.title}</strong>
+                            <span>${contract.clientName || contract.client || 'Cliente sin especificar'} · ${contractService.getPaymentFrequencyLabel(contract.paymentFrequency)}</span>
+                        </span>
+                        <span class="dash-contract-card__payment">
+                            <strong>${formatCurrency(nextPayment.amount)}</strong>
+                            <span>${formatDate(nextPayment.dueDate)}</span>
+                        </span>
+                    </button>
+                `).join('')}
+            </section>
+
             <!-- Actividad reciente -->
             ${last3Paid.length > 0 ? `
             <section class="dash-section dash-section--payments">
@@ -135,6 +166,13 @@ export function renderDashboardView() {
 }
 
 export function initDashboardViewEvents() {
+    document.getElementById('btnViewContracts')?.addEventListener('click', () => navigate('contracts'));
+
+    document.querySelector('.dash-section--contracts')?.addEventListener('click', event => {
+        const card = event.target.closest('.dash-contract-card');
+        if (card) navigate('contract-detail', card.dataset.contractId);
+    });
+
     const btnVerPagos = document.getElementById('btnVerPagosAtrasados');
     if (btnVerPagos) {
         btnVerPagos.addEventListener('click', () => navigate('payments', 'overdue'));
