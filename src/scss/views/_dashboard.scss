@@ -1,15 +1,26 @@
 @use '../abstracts/variables' as vars;
 @use '../abstracts/mixins' as mix;
 
+:root {
+  --section-gap: 28px;
+  --title-to-content-gap: 12px;
+}
+
 // ─── Saludo ───
 .dash-greeting {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
+  gap: vars.$space-sm;
   margin-bottom: vars.$space-lg;
 }
 
 .dashboard-view {
+  display: flex;
+  flex-direction: column;
+  gap: vars.$space-lg;
+  width: 100%;
+  min-width: 0;
   padding-bottom: calc(72px + env(safe-area-inset-bottom));
 }
 
@@ -28,18 +39,39 @@
 .dash-alert {
   display: flex;
   align-items: center;
-  gap: vars.$space-md;
-  padding: vars.$space-md;
-  margin-bottom: vars.$space-lg;
+  gap: vars.$space-sm;
+  padding: 12px 14px;
+  margin-bottom: vars.$space-md;
   background-color: rgba(239, 68, 68, 0.08);
   border: 1px solid rgba(239, 68, 68, 0.25);
   border-radius: vars.$radius-md;
+  box-shadow: 0 10px 18px rgba(15, 23, 42, 0.04);
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.dash-alert__count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: rgba(239, 68, 68, 0.14);
+  color: vars.$danger;
+  font-size: 11px;
+  font-weight: vars.$weight-bold;
 }
 
 .dash-alert__icon {
   color: vars.$danger;
   flex-shrink: 0;
   display: flex;
+  transform: scale(0.9);
 }
 
 .dash-alert__info {
@@ -48,28 +80,29 @@
 
   strong {
     display: block;
-    font-size: vars.$font-sm;
+    font-size: vars.$font-xs;
     font-weight: vars.$weight-semibold;
     color: vars.$danger;
-    line-height: 1.3;
+    line-height: 1.25;
   }
 
   span {
-    font-size: vars.$font-xs;
+    font-size: 10px;
     color: vars.$text-secondary;
   }
 }
 
 .dash-alert__btn {
   flex-shrink: 0;
-  padding: 6px 14px;
-  font-size: vars.$font-xs;
+  padding: 5px 10px;
+  font-size: 10px;
   font-weight: vars.$weight-semibold;
   color: vars.$danger;
   border: 1px solid rgba(239, 68, 68, 0.4);
   border-radius: vars.$radius-full;
   background: transparent;
   cursor: pointer;
+  min-height: 28px;
 
   &:active {
     background-color: rgba(239, 68, 68, 0.15);
@@ -79,9 +112,15 @@
 // ─── KPIs en grid 2×2 ───
 .dash-kpis {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: vars.$space-md;
-  margin-bottom: vars.$space-2xl;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: vars.$space-sm;
+  margin-bottom: 0;
+}
+
+.dash-kpi,
+.dash-alert {
+  min-width: 0;
+  flex-shrink: 0;
 }
 
 .dash-kpi {
@@ -93,6 +132,7 @@
   border: 1px solid vars.$border;
   border-radius: vars.$radius-md;
   border-left: 3px solid transparent;
+  box-shadow: 0 8px 14px rgba(15, 23, 42, 0.02);
 }
 
 .dash-kpi__icon {
@@ -109,6 +149,7 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
+  max-width: 100%;
 }
 
 .dash-kpi__value {
@@ -119,6 +160,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  max-width: 100%;
 }
 
 .dash-kpi__label {
@@ -147,14 +189,54 @@
 
 // ─── Secciones del dashboard ───
 .dash-section {
-  margin-bottom: vars.$space-2xl;
+  margin-bottom: 0;
+}
+
+.dashboard-main-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: vars.$space-lg;
+  margin-top: calc(var(--section-gap) - #{vars.$space-lg});
+  align-items: start;
+  width: 100%;
+  min-width: 0;
+}
+
+.dash-section {
+  width: 100%;
+  min-width: 0;
 }
 
 .dash-section__title {
   font-size: vars.$font-base;
   font-weight: vars.$weight-semibold;
   color: vars.$text-primary;
-  margin-bottom: vars.$space-md;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.dash-section--events {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--title-to-content-gap);
+  align-items: stretch;
+}
+
+.dash-section--contracts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--title-to-content-gap);
+}
+
+.dash-section--payments {
+  margin-top: vars.$space-lg;
+  display: flex;
+  flex-direction: column;
+  gap: vars.$space-sm;
+}
+
+.dash-section--events .dash-section__title {
+  grid-column: 1 / -1;
 }
 
 .dash-section__heading {
@@ -177,6 +259,8 @@
   border-radius: vars.$radius-md;
   color: vars.$text-primary;
   text-align: left;
+  min-width: 0;
+  transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
 
   &__main, &__payment {
     min-width: 0;
@@ -185,14 +269,172 @@
     gap: 3px;
   }
 
-  &__main { flex: 1; }
-  &__payment { align-items: flex-end; flex: 0 0 auto; }
+  &__main {
+    flex: 1;
+    overflow: hidden;
+    min-width: 0;
+  }
+
+  &__payment {
+    align-items: flex-end;
+    flex: 0 0 auto;
+    min-width: 120px;
+    text-align: right;
+  }
 
   strong { font-size: vars.$font-sm; }
   span { color: vars.$text-secondary; font-size: vars.$font-xs; }
   &__payment strong { color: vars.$success; }
 
+  &:hover {
+    border-color: rgba(99, 102, 241, 0.28);
+    box-shadow: 0 12px 18px rgba(15, 23, 42, 0.04);
+  }
+
   &:active { background: vars.$surface-elevated; }
+}
+
+@media (max-width: 900px) {
+  .dashboard-view {
+    gap: vars.$space-md;
+  }
+
+  .dash-greeting {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: vars.$space-md;
+  }
+
+  .dashboard-main-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dash-kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: vars.$space-sm;
+  }
+
+  .dash-kpi {
+    padding: 12px 14px;
+  }
+
+  .dash-section--events {
+    grid-template-columns: 1fr;
+  }
+
+  .dash-section--events,
+  .dash-section--contracts {
+    grid-column: 1;
+  }
+}
+
+@media (max-width: 767px) {
+  .dashboard-view {
+    display: block;
+    position: relative;
+  }
+
+  .dash-greeting {
+    margin-bottom: vars.$space-md;
+  }
+
+  .dash-greeting__name {
+    font-size: vars.$font-lg;
+  }
+
+  .dash-alert {
+    position: fixed;
+    left: max(12px, env(safe-area-inset-left));
+    bottom: calc(var(--bottom-nav-height) + 12px + env(safe-area-inset-bottom));
+    z-index: 25;
+    width: auto;
+    max-width: 180px;
+    margin: 0;
+    padding: 8px 10px;
+    border-radius: 999px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 18px rgba(239, 68, 68, 0.12);
+    pointer-events: auto;
+  }
+
+  .dash-alert__icon {
+    transform: scale(0.75);
+  }
+
+  .dash-alert__count {
+    display: inline-flex;
+    min-width: 18px;
+    height: 18px;
+    font-size: 10px;
+  }
+
+  .dash-alert__info,
+  .dash-alert__btn {
+    display: none;
+  }
+
+  .dash-kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: vars.$space-sm;
+  }
+
+  .dash-kpi {
+    gap: vars.$space-sm;
+    padding: vars.$space-sm;
+  }
+
+  .dash-kpi__value {
+    font-size: vars.$font-sm;
+  }
+
+  .dash-kpi__label {
+    font-size: 10px;
+  }
+
+  .dash-section__title {
+    font-size: vars.$font-sm;
+  }
+
+  .dash-event-card,
+  .dash-contract-card,
+  .dash-payment-item,
+  .dash-kpi,
+  .dash-alert {
+    min-width: 0;
+  }
+
+  .dash-event-card {
+    padding: 12px;
+    min-height: auto;
+  }
+
+  .dash-contract-card {
+    flex-wrap: wrap;
+    align-items: flex-start;
+    padding: 12px;
+  }
+
+  .dash-contract-card__main {
+    width: 100%;
+    flex-basis: 100%;
+  }
+
+  .dash-contract-card__payment {
+    width: 100%;
+    align-items: flex-start;
+    min-width: 0;
+  }
+
+  .dash-payment-item {
+    padding: 12px;
+  }
+
+  .dash-event-card__main strong,
+  .dash-contract-card__main strong,
+  .dash-payment-item__info strong {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
 }
 
 .dash-section__empty {
@@ -207,24 +449,34 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: vars.$space-sm;
-  padding: vars.$space-md;
+  gap: 12px;
+  padding: 16px 18px;
   background-color: vars.$surface;
   border: 1px solid vars.$border;
   border-radius: vars.$radius-md;
-  margin-bottom: vars.$space-sm;
+  margin-bottom: 0;
+  min-height: 0;
+  height: auto;
+  box-shadow: 0 8px 14px rgba(15, 23, 42, 0.02);
 }
 
 .dash-event-card__main {
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 6px;
+  max-width: 100%;
 
   strong {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
     font-size: vars.$font-sm;
     font-weight: vars.$weight-semibold;
     color: vars.$text-primary;
+    overflow-wrap: anywhere;
+    word-break: break-word;
   }
 }
 
@@ -233,7 +485,8 @@
   color: vars.$text-secondary;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
+  line-height: 1.4;
 
   svg {
     flex-shrink: 0;
@@ -278,6 +531,37 @@
 }
 
 @media (min-width: 900px) {
+  .dash-alert {
+    position: fixed;
+    left: max(12px, env(safe-area-inset-left));
+    bottom: calc(var(--bottom-nav-height) + 12px + env(safe-area-inset-bottom));
+    z-index: 25;
+    width: auto;
+    max-width: 180px;
+    margin: 0;
+    padding: 8px 10px;
+    border-radius: 999px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 18px rgba(239, 68, 68, 0.12);
+    pointer-events: auto;
+  }
+
+  .dash-alert__icon {
+    transform: scale(0.75);
+  }
+
+  .dash-alert__count {
+    display: inline-flex;
+    min-width: 18px;
+    height: 18px;
+    font-size: 10px;
+  }
+
+  .dash-alert__info,
+  .dash-alert__btn {
+    display: none;
+  }
+
   .dashboard-view {
     display: grid;
     grid-template-columns: repeat(12, minmax(0, 1fr));
@@ -286,9 +570,17 @@
 
   .dash-greeting,
   .dash-alert,
-  .dash-kpis {
+  .dash-kpis,
+  .dashboard-main-grid,
+  .dash-section--payments {
     grid-column: 1 / -1;
     margin-bottom: 0;
+  }
+
+  .dashboard-main-grid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: vars.$space-lg;
   }
 
   .dash-greeting {
@@ -314,8 +606,8 @@
   }
 
   .dash-section--events { grid-column: span 7; }
-  .dash-section--payments { grid-column: span 5; }
-  .dash-section--contracts { grid-column: span 7; }
+  .dash-section--contracts { grid-column: span 5; }
+  .dash-section--payments { grid-column: 1 / -1; }
 
   .fab {
     right: max(32px, calc((100vw - 1280px) / 2));

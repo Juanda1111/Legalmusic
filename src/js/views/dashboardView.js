@@ -68,13 +68,14 @@ export function renderDashboardView() {
 
             <!-- Alerta de pagos atrasados -->
             ${overduePayments.length > 0 ? `
-            <div class="dash-alert">
+            <div class="dash-alert" id="dashAlertOverdue" aria-label="Ver pagos atrasados">
                 <div class="dash-alert__icon">${icon('alertTriangle', 18)}</div>
                 <div class="dash-alert__info">
                     <strong>${overduePayments.length} pago${overduePayments.length > 1 ? 's' : ''} atrasado${overduePayments.length > 1 ? 's' : ''}</strong>
                     <span>${formatCurrency(overdueAmount)}</span>
                 </div>
-                <button class="dash-alert__btn" id="btnVerPagosAtrasados">Ver</button>
+                <button class="dash-alert__btn" id="btnVerPagosAtrasados" type="button">Ver</button>
+                <span class="dash-alert__count" aria-hidden="true">${overduePayments.length}</span>
             </div>
             ` : ''}
 
@@ -110,43 +111,44 @@ export function renderDashboardView() {
                 </div>
             </div>
 
-            <!-- Próximos eventos -->
-            <section class="dash-section dash-section--events">
-                <h3 class="dash-section__title">Próximos Eventos</h3>
-                ${next3Events.length === 0
-                    ? renderEmptyState({ iconName: 'calendar', title: 'Sin eventos próximos', description: 'Tus próximos eventos aparecerán aquí.', compact: true })
-                    : next3Events.map(e => `
-                    <div class="dash-event-card">
-                        <div class="dash-event-card__main">
-                            <strong>${e.name}</strong>
-                            <span class="dash-event-card__detail">${icon('mapPin', 14)} ${e.venue}</span>
-                            <span class="dash-event-card__detail">${icon('calendar', 14)} ${formatDate(e.date)} · ${e.showTime}</span>
+            <div class="dashboard-main-grid">
+                <section class="dash-section dash-section--events">
+                    <h3 class="dash-section__title">Próximos Eventos</h3>
+                    ${next3Events.length === 0
+                        ? renderEmptyState({ iconName: 'calendar', title: 'Sin eventos próximos', description: 'Tus próximos eventos aparecerán aquí.', compact: true })
+                        : next3Events.map(e => `
+                        <div class="dash-event-card">
+                            <div class="dash-event-card__main">
+                                <strong>${e.name}</strong>
+                                <span class="dash-event-card__detail">${icon('mapPin', 14)} ${e.venue}</span>
+                                <span class="dash-event-card__detail">${icon('calendar', 14)} ${formatDate(e.date)} · ${e.showTime}</span>
+                            </div>
+                            <span class="badge badge--${getStatusClass(e.status)}">${getStatusLabel(e.status)}</span>
                         </div>
-                        <span class="badge badge--${getStatusClass(e.status)}">${getStatusLabel(e.status)}</span>
-                    </div>
-                `).join('')}
-            </section>
+                    `).join('')}
+                </section>
 
-            <section class="dash-section dash-section--contracts">
-                <div class="dash-section__heading">
-                    <h3 class="dash-section__title">Contratos y próximos pagos</h3>
-                    <button class="btn btn--ghost btn--sm" id="btnViewContracts">Ver todos</button>
-                </div>
-                ${contractHighlights.length === 0
-                    ? renderEmptyState({ iconName: 'fileText', title: 'Sin pagos programados', description: 'Crea un contrato con calendario de pagos para verlo aquí.', compact: true })
-                    : contractHighlights.map(({ contract, nextPayment }) => `
-                    <button class="dash-contract-card" data-contract-id="${contract.id}">
-                        <span class="dash-contract-card__main">
-                            <strong>${contract.title}</strong>
-                            <span>${contract.clientName || contract.client || 'Cliente sin especificar'} · ${contractService.getPaymentFrequencyLabel(contract.paymentFrequency)}</span>
-                        </span>
-                        <span class="dash-contract-card__payment">
-                            <strong>${formatCurrency(nextPayment.amount)}</strong>
-                            <span>${formatDate(nextPayment.dueDate)}</span>
-                        </span>
-                    </button>
-                `).join('')}
-            </section>
+                <section class="dash-section dash-section--contracts">
+                    <div class="dash-section__heading">
+                        <h3 class="dash-section__title">Contratos y próximos pagos</h3>
+                        <button class="btn btn--ghost btn--sm" id="btnViewContracts">Ver todos</button>
+                    </div>
+                    ${contractHighlights.length === 0
+                        ? renderEmptyState({ iconName: 'fileText', title: 'Sin pagos programados', description: 'Crea un contrato con calendario de pagos para verlo aquí.', compact: true })
+                        : contractHighlights.map(({ contract, nextPayment }) => `
+                        <button class="dash-contract-card" data-contract-id="${contract.id}">
+                            <span class="dash-contract-card__main">
+                                <strong>${contract.title}</strong>
+                                <span>${contract.clientName || contract.client || 'Cliente sin especificar'} · ${contractService.getPaymentFrequencyLabel(contract.paymentFrequency)}</span>
+                            </span>
+                            <span class="dash-contract-card__payment">
+                                <strong>${formatCurrency(nextPayment.amount)}</strong>
+                                <span>${formatDate(nextPayment.dueDate)}</span>
+                            </span>
+                        </button>
+                    `).join('')}
+                </section>
+            </div>
 
             <!-- Actividad reciente -->
             ${last3Paid.length > 0 ? `
@@ -182,9 +184,28 @@ export function initDashboardViewEvents() {
         if (card) navigate('contract-detail', card.dataset.contractId);
     });
 
+    const dashAlert = document.getElementById('dashAlertOverdue');
     const btnVerPagos = document.getElementById('btnVerPagosAtrasados');
+
+    if (dashAlert) {
+        dashAlert.addEventListener('click', (event) => {
+            if (event.target.closest('.dash-alert__btn')) return;
+            navigate('payments', 'overdue');
+            requestAnimationFrame(() => {
+                const section = document.querySelector('.payments-workspace');
+                if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+    }
+
     if (btnVerPagos) {
-        btnVerPagos.addEventListener('click', () => navigate('payments', 'overdue'));
+        btnVerPagos.addEventListener('click', () => {
+            navigate('payments', 'overdue');
+            requestAnimationFrame(() => {
+                const section = document.querySelector('.payments-workspace');
+                if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
     }
 
     const fab = document.getElementById('dashboardFab');

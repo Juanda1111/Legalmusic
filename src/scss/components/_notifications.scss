@@ -1,6 +1,6 @@
 @use '../abstracts/variables' as vars;
 
-.notification-action { min-height: 36px; padding: 6px vars.$space-sm; text-align: center; line-height: 1.2; white-space: normal; }
+.notification-action { min-height: 30px; padding: 5px 10px; text-align: center; line-height: 1.2; white-space: normal; }
 .notification-reminder { display: inline-flex; align-items: center; gap: 4px; color: vars.$text-secondary; font-size: 10px; }
 .notification-reminder__select { max-width: 100px; padding: 4px; color: vars.$text-primary; background: vars.$surface-elevated; border: 1px solid vars.$border; border-radius: vars.$radius-sm; font-size: 10px; }
 .notification-menu { position: relative; display: inline-block; }
@@ -9,21 +9,21 @@
 .notification-menu__option { padding: 8px; color: vars.$text-primary; text-align: left; font-size: vars.$font-xs; border-radius: vars.$radius-sm; }
 .notification-menu__option:hover { background: vars.$surface; }
 .notification-calendar { display: inline-flex; align-items: center; gap: 6px; }
-.notification-payment-row { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 8px 12px; align-items: center; padding: 10px 12px; border-bottom: 1px solid vars.$border; }
+.notification-payment-row { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 6px 10px; align-items: center; padding: 10px 12px; border-bottom: 1px solid vars.$border; }
 .notification-payment-row > div:first-child { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
 .notification-payment-row > div:first-child span { color: vars.$text-secondary; font-size: vars.$font-xs; }
 .notification-payment-row__actions { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px; }
-.template-picker { display: grid; gap: 8px; margin-bottom: 18px; padding: 12px; background: rgba(99, 102, 241, 0.08); border: 1px solid rgba(99, 102, 241, 0.25); border-radius: 8px; }
+.template-picker { display: grid; gap: 8px; margin-bottom: 14px; padding: 10px 12px; background: rgba(99, 102, 241, 0.08); border: 1px solid rgba(99, 102, 241, 0.25); border-radius: 8px; }
 .template-picker > div { display: flex; flex-direction: column; gap: 2px; }
 .template-picker strong { font-size: 13px; }
 .template-picker span { color: vars.$text-secondary; font-size: 11px; }
-.template-save { position: sticky; bottom: -1px; z-index: 2; display: grid; gap: 8px; margin: -4px 0 16px; padding: 12px; background: vars.$surface-elevated; border: 1px solid rgba(16, 185, 129, 0.35); border-radius: vars.$radius-md; box-shadow: 0 -8px 16px rgba(24, 27, 32, 0.85); }
+.template-save { position: sticky; bottom: -1px; z-index: 2; display: grid; gap: 8px; margin: -4px 0 14px; padding: 10px 12px; background: vars.$surface-elevated; border: 1px solid rgba(16, 185, 129, 0.35); border-radius: vars.$radius-md; box-shadow: 0 -8px 16px rgba(24, 27, 32, 0.85); }
 .template-save > div { display: flex; flex-direction: column; gap: 2px; }
 .template-save strong { font-size: 12px; }
 .template-save span { color: vars.$text-secondary; font-size: 11px; }
-.template-save .form-control { min-height: 40px; }
-.template-save .btn { width: 100%; min-height: 40px; background: vars.$success; color: #ffffff; }
-.notification-event-actions { display: grid; gap: 10px; margin-top: 16px; }
+.template-save .form-control { min-height: 38px; }
+.template-save .btn { width: 100%; min-height: 38px; background: vars.$success; color: #ffffff; }
+.notification-event-actions { display: grid; gap: 8px; margin-top: 12px; }
 .notification-event-actions .notification-calendar { display: grid; gap: 6px; }
 .notification-event-actions .notification-action { width: 100%; }
 @media (max-width: 600px) { .notification-payment-row { grid-template-columns: minmax(0, 1fr) auto; } .notification-payment-row > .badge { grid-column: 1 / -1; justify-self: start; } }

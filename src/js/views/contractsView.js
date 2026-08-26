@@ -227,14 +227,16 @@ function renderPaymentDynamicFields(contract = {}) {
 
     return `
         <div class="payment-dynamic-block">
-            <div class="form-group">
-                <label class="form-label">Calendario de pagos</label>
-                <small class="muted">${config.helper}</small>
+            <div class="payment-dynamic-block__header">
+                <div>
+                    <span class="payment-dynamic-block__eyebrow">Calendario de pagos</span>
+                    <strong>${config.helper}</strong>
+                </div>
             </div>
             ${config.fields.map(field => {
                 const value = contract[field.key] ?? '';
                 return `
-                    <div class="form-group">
+                    <div class="form-group payment-dynamic-block__field">
                         <label class="form-label">${field.label}</label>
                         <input
                             type="${field.type}"

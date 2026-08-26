@@ -5,12 +5,17 @@
 .btn {
   @include mix.touch-target;
   padding: 0 vars.$space-lg;
+  border: 1px solid transparent;
   border-radius: vars.$radius-md;
   font-weight: vars.$weight-semibold;
   font-size: vars.$font-sm;
+  letter-spacing: 0.01em;
   transition: all vars.$transition-fast;
   display: inline-flex;
+  align-items: center;
+  justify-content: center;
   gap: vars.$space-sm;
+  box-shadow: 0 6px 18px rgba(15, 17, 21, 0.18);
   
   &:active {
     transform: scale(0.98);
@@ -20,46 +25,53 @@
     opacity: 0.5;
     cursor: not-allowed;
     transform: none;
+    box-shadow: none;
   }
 
   &--primary {
-    background-color: vars.$primary;
+    background: linear-gradient(180deg, rgba(129, 140, 248, 0.96), vars.$primary);
     color: #ffffff;
+    border-color: rgba(129, 140, 248, 0.5);
     
-    &:hover { background-color: color.adjust(vars.$primary, $lightness: 5%); }
+    &:hover { background: linear-gradient(180deg, rgba(129, 140, 248, 1), color.adjust(vars.$primary, $lightness: 3%)); }
   }
 
   &--secondary {
-    background-color: transparent;
-    border: 1px solid vars.$primary;
+    background: rgba(99, 102, 241, 0.08);
+    border: 1px solid rgba(129, 140, 248, 0.45);
     color: vars.$primary-light;
+    box-shadow: none;
+
+    &:hover { background: rgba(99, 102, 241, 0.14); }
   }
 
   &--success {
-    background-color: vars.$success;
+    background: linear-gradient(180deg, rgba(16, 185, 129, 0.96), vars.$success);
     color: #ffffff;
   }
 
   &--warning {
-    background-color: vars.$warning;
+    background: linear-gradient(180deg, rgba(245, 158, 11, 0.96), vars.$warning);
     color: #ffffff;
   }
 
   &--danger {
-    background-color: vars.$danger;
+    background: linear-gradient(180deg, rgba(239, 68, 68, 0.96), vars.$danger);
     color: #ffffff;
   }
 
   &--ghost {
     background-color: transparent;
+    border-color: rgba(148, 163, 184, 0.25);
     color: vars.$text-secondary;
+    box-shadow: none;
     
-    &:hover { color: vars.$text-primary; }
+    &:hover { color: vars.$text-primary; background: rgba(148, 163, 184, 0.04); }
   }
 
   &--sm {
-    min-height: 36px;
-    padding: 0 vars.$space-md;
+    min-height: 32px;
+    padding: 0 10px;
     font-size: vars.$font-xs;
   }
 
@@ -70,7 +82,7 @@
 
 .fab {
   position: fixed;
-  bottom: calc(64px + env(safe-area-inset-bottom) + vars.$space-lg);
+  bottom: calc(var(--bottom-nav-height) + 12px + env(safe-area-inset-bottom));
   right: vars.$space-lg;
   width: 52px;
   height: 52px;

@@ -32,22 +32,24 @@
     @include mix.card-base;
     background: linear-gradient(135deg, vars.$surface-elevated 0%, vars.$surface 100%);
     border: 1px solid rgba(vars.$primary, 0.3);
-    margin-bottom: vars.$space-xl;
+    margin-bottom: vars.$space-lg;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: vars.$space-sm;
+    gap: vars.$space-xs;
+    padding: vars.$space-md;
 
     &__item {
       min-width: 0;
       text-align: center;
+      padding: 6px 4px;
 
       span {
         display: flex;
         align-items: center;
         justify-content: center;
         gap: vars.$space-xs;
-        font-size: vars.$font-xs;
-        margin-bottom: vars.$space-xs;
+        font-size: 10px;
+        margin-bottom: 4px;
       }
 
       h3 {
@@ -178,7 +180,7 @@
     display: flex;
     width: fit-content;
     max-width: 100%;
-    margin-bottom: vars.$space-md;
+    margin-bottom: vars.$space-sm;
     background-color: vars.$surface-elevated;
     border-radius: vars.$radius-md;
     padding: 4px;
@@ -190,13 +192,13 @@
       justify-content: center;
       align-items: center;
       gap: 4px;
-      padding: vars.$space-sm vars.$space-md;
+      padding: 6px 10px;
       border-radius: vars.$radius-md;
       font-size: vars.$font-xs;
       font-weight: vars.$weight-medium;
       color: vars.$text-secondary;
       @include mix.touch-target;
-      min-height: 36px;
+      min-height: 32px;
 
       &.active {
         background-color: vars.$surface;
@@ -208,7 +210,7 @@
 
   .payment-card {
     padding: vars.$space-md;
-    margin-bottom: vars.$space-md;
+    margin-bottom: vars.$space-sm;
     background: vars.$surface;
     border: 1px solid vars.$border;
     border-left: 4px solid vars.$warning;
