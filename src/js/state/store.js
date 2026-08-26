@@ -7,6 +7,7 @@ class Store {
     this.state = {
       currentUser: null,
       contracts: [],
+      people: [],
       events: [],
       riders: [],
       payments: [],
@@ -55,6 +56,7 @@ class Store {
     this.state.currentUser = getItem(STORAGE_KEYS.SESSION);
     const userId = this.state.currentUser?.id;
     this.state.contracts = getUserItem(STORAGE_KEYS.CONTRACTS, userId) || [];
+    this.state.people = getUserItem(STORAGE_KEYS.PEOPLE, userId) || [];
     this.state.events = getUserItem(STORAGE_KEYS.EVENTS, userId) || [];
     this.state.riders = getUserItem(STORAGE_KEYS.RIDERS, userId) || [];
     this.state.payments = getUserItem(STORAGE_KEYS.PAYMENTS, userId) || [];
@@ -63,6 +65,24 @@ class Store {
   }
 
   // Métodos específicos
+  addPerson(person) {
+    const people = [...this.state.people, person];
+    this.setState('people', people);
+    setUserItem(STORAGE_KEYS.PEOPLE, this.state.currentUser?.id, people);
+  }
+
+  updatePerson(id, updates) {
+    const people = this.state.people.map(person => String(person.id) === String(id) ? { ...person, ...updates } : person);
+    this.setState('people', people);
+    setUserItem(STORAGE_KEYS.PEOPLE, this.state.currentUser?.id, people);
+  }
+
+  deletePerson(id) {
+    const people = this.state.people.filter(person => String(person.id) !== String(id));
+    this.setState('people', people);
+    setUserItem(STORAGE_KEYS.PEOPLE, this.state.currentUser?.id, people);
+  }
+
   addContract(contract) {
     const contracts = [...this.state.contracts, contract];
     this.setState('contracts', contracts);

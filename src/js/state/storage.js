@@ -2,6 +2,7 @@ export const STORAGE_KEYS = {
   USERS: 'lm_users',
   SESSION: 'lm_session',
   CONTRACTS: 'lm_contracts',
+  PEOPLE: 'lm_people',
   EVENTS: 'lm_events',
   RIDERS: 'lm_riders',
   PAYMENTS: 'lm_payments',

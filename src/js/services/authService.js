@@ -22,7 +22,7 @@ class AuthService {
     
     users.push(newUser);
     setItem(STORAGE_KEYS.USERS, users);
-    ['CONTRACTS', 'EVENTS', 'RIDERS', 'PAYMENTS'].forEach(key => setUserItem(STORAGE_KEYS[key], newUser.id, []));
+    ['CONTRACTS', 'EVENTS', 'RIDERS', 'PAYMENTS', 'PEOPLE'].forEach(key => setUserItem(STORAGE_KEYS[key], newUser.id, []));
     
     // Auto login
     setItem(STORAGE_KEYS.SESSION, newUser);

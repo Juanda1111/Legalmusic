@@ -13,6 +13,7 @@ export const renderHeader = (user, notificationCount, currentView) => {
     riders: { title: 'Riders Técnicos', backId: 'btnBackDashboard', backLabel: 'Volver al inicio', backView: 'dashboard' },
     payments: { title: 'Pagos', description: 'Controla lo recibido y lo que está por cobrar.', backId: 'btnBackDashboard', backLabel: 'Volver al inicio', backView: 'dashboard' },
     notifications: { title: 'Notificaciones', backId: 'btnBackDashboard', backLabel: 'Volver al inicio', backView: 'dashboard' }
+    ,people: { title: 'Personas', backId: 'btnBackDashboard', backLabel: 'Volver al inicio', backView: 'dashboard' }
   }[currentView];
 
   const badgeHTML = notificationCount > 0

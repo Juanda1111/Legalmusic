@@ -6,6 +6,7 @@ export const NAV_ITEMS = [
   { id: 'contracts', label: 'Contratos', icon: 'fileText', view: 'contracts' },
   { id: 'events', label: 'Eventos', icon: 'calendar', view: 'events' },
   { id: 'riders', label: 'Riders', icon: 'music', view: 'riders' }
+  ,{ id: 'people', label: 'Personas', icon: 'user', view: 'people' }
 ];
 
 export const renderBottomNav = (activeView) => {

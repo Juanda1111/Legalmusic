@@ -5,7 +5,7 @@ export const initializeData = () => {
   if (getItem(STORAGE_KEYS.SEED_DONE)) {
     const demoUser = getItem(STORAGE_KEYS.USERS)?.find(user => user.id === 'user-1');
     if (demoUser && !getUserItem(STORAGE_KEYS.CONTRACTS, demoUser.id)) {
-      ['CONTRACTS', 'EVENTS', 'RIDERS', 'PAYMENTS'].forEach(key => {
+      ['CONTRACTS', 'EVENTS', 'RIDERS', 'PAYMENTS', 'PEOPLE'].forEach(key => {
         const legacyData = getItem(STORAGE_KEYS[key]);
         if (legacyData) setUserItem(STORAGE_KEYS[key], demoUser.id, legacyData);
       });
@@ -95,6 +95,7 @@ export const initializeData = () => {
   // Guardar en localStorage
   setItem(STORAGE_KEYS.USERS, demoUsers);
   setUserItem(STORAGE_KEYS.CONTRACTS, 'user-1', contracts);
+  setUserItem(STORAGE_KEYS.PEOPLE, 'user-1', []);
   setUserItem(STORAGE_KEYS.EVENTS, 'user-1', events);
   setUserItem(STORAGE_KEYS.RIDERS, 'user-1', riders);
   setUserItem(STORAGE_KEYS.PAYMENTS, 'user-1', payments);

@@ -14,6 +14,7 @@ import { renderEventsView, initEventsViewEvents } from './views/eventsView.js';
 import { renderRidersView, initRidersViewEvents } from './views/ridersView.js';
 import { renderPaymentsView, initPaymentsViewEvents } from './views/paymentsView.js';
 import { renderNotificationsView, initNotificationsViewEvents } from './views/notificationsView.js';
+import { renderPeopleView, initPeopleViewEvents } from './views/peopleView.js';
 
 // Registro de rutas con sus funciones de renderizado e inicialización de eventos
 const ROUTES = {
@@ -55,6 +56,11 @@ const ROUTES = {
   'notifications': {
     render: renderNotificationsView,
     init: initNotificationsViewEvents,
+    requiresAuth: true
+  },
+  people: {
+    render: renderPeopleView,
+    init: initPeopleViewEvents,
     requiresAuth: true
   }
 };

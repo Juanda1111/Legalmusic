@@ -237,6 +237,13 @@ function renderEventForm(event = {}, contracts = []) {
                 <input type="text" class="form-control" name="artist" value="${event.artist || ''}" placeholder="Nombre del artista o banda">
             </div>
             <div class="form-group">
+                <label class="form-label">Persona relacionada <span class="muted">(opcional)</span></label>
+                <select class="form-control form-select" name="personId">
+                    <option value="">Sin relacionar</option>
+                    ${(store.getState().people || []).map(person => `<option value="${person.id}" ${String(event.personId) === String(person.id) ? 'selected' : ''}>${person.fullName}</option>`).join('')}
+                </select>
+            </div>
+            <div class="form-group">
                 <label class="form-label">Teléfono para WhatsApp</label>
                 <input type="tel" class="form-control" name="telefono" value="${event.telefono || event.phone || ''}" placeholder="+57 300 123 4567">
             </div>

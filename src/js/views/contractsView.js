@@ -293,6 +293,13 @@ function renderContractForm(contract = {}) {
                 <input type="text" class="form-control" name="clientName" value="${contract.clientName || contract.client || ''}" required>
             </div>
             <div class="form-group">
+                <label class="form-label">Persona relacionada <span class="muted">(opcional)</span></label>
+                <select class="form-control form-select" name="personId">
+                    <option value="">Sin relacionar</option>
+                    ${(store.getState().people || []).map(person => `<option value="${person.id}" ${String(contract.personId) === String(person.id) ? 'selected' : ''}>${person.fullName}</option>`).join('')}
+                </select>
+            </div>
+            <div class="form-group">
                 <label class="form-label">Teléfono para WhatsApp</label>
                 <input type="tel" class="form-control" name="telefono" value="${contract.telefono || contract.phone || ''}" placeholder="+57 300 123 4567">
             </div>
