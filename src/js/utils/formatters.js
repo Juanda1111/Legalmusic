@@ -7,6 +7,13 @@ export const parseDate = (dateString) => {
   return new Date(dateString);
 };
 
+export const isBeforeToday = (dateString) => {
+  const date = parseDate(dateString);
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  return date < today;
+};
+
 export const formatCurrency = (amount) => {
   return new Intl.NumberFormat('es-CO', {
     style: 'currency',

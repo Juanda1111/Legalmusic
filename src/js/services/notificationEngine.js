@@ -19,15 +19,16 @@ class NotificationEngine {
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
       
       let type, priority, message;
+      const dayLabel = diffDays === 1 ? 'día' : 'días';
 
       if (diffDays < 0) {
         type = 'overdue';
         priority = 'high';
-        message = `El pago está vencido hace ${Math.abs(diffDays)} días.`;
+        message = `El pago está vencido hace ${Math.abs(diffDays)} ${Math.abs(diffDays) === 1 ? 'día' : 'días'}.`;
       } else if (diffDays <= 3) {
         type = 'due_soon';
         priority = 'medium';
-        message = diffDays === 0 ? 'El pago vence HOY.' : `El pago vence en ${diffDays} días.`;
+        message = diffDays === 0 ? 'El pago vence HOY.' : `El pago vence en ${diffDays} ${dayLabel}.`;
       } else if (diffDays <= 7) {
         type = 'upcoming';
         priority = 'low';

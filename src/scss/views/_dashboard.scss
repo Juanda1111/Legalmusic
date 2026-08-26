@@ -9,6 +9,10 @@
   margin-bottom: vars.$space-lg;
 }
 
+.dashboard-view {
+  padding-bottom: calc(72px + env(safe-area-inset-bottom));
+}
+
 .dash-greeting__name {
   font-size: vars.$font-xl;
   font-weight: vars.$weight-bold;
@@ -75,7 +79,7 @@
 // ─── KPIs en grid 2×2 ───
 .dash-kpis {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: vars.$space-md;
   margin-bottom: vars.$space-2xl;
 }
@@ -233,4 +237,24 @@
   color: vars.$success;
   flex-shrink: 0;
   margin-left: vars.$space-sm;
+}
+
+@media (max-width: 360px) {
+  .dash-kpis {
+    gap: vars.$space-sm;
+  }
+
+  .dash-kpi {
+    gap: vars.$space-sm;
+    padding: vars.$space-sm;
+  }
+
+  .dash-kpi__icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .dash-kpi__value {
+    font-size: vars.$font-sm;
+  }
 }
