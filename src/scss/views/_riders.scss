@@ -18,7 +18,33 @@
     }
   }
 
+  .rider-mic-row {
+    min-width: 0;
+
+    input {
+      min-width: 0;
+    }
+  }
+
   // Animaciones y estados para el contenido están manejados 
   // inline o vía JS, pero dejamos las clases listas para 
   // cualquier ajuste futuro.
+}
+
+@media (max-width: 380px) {
+  .riders-view .rider-mic-row {
+    flex-wrap: wrap;
+
+    input {
+      flex: 1 1 calc(50% - 4px) !important;
+    }
+
+    input[name^='mic_name_'], input[name^='mic_use_'] {
+      flex-basis: calc(100% - 44px) !important;
+    }
+
+    .btn-remove-mic {
+      margin-left: auto;
+    }
+  }
 }
