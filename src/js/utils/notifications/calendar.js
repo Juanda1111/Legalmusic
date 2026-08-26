@@ -49,3 +49,14 @@ export const downloadICS = (icsContent, filename) => {
   link.click();
   link.remove();
 };
+
+export const buildCalendarLink = ({ title, description, date, time = '09:00', durationMinutes = 60 }) => {
+  const start = bogotaDateTime(date, time);
+  const [year, month, day] = String(date).split('-').map(Number);
+  const [hours, minutes] = String(time).split(':').map(Number);
+  const endDate = new Date(year, month - 1, day, hours || 0, minutes || 0);
+  endDate.setMinutes(endDate.getMinutes() + Number(durationMinutes));
+  const end = `${endDate.getFullYear()}${pad(endDate.getMonth() + 1)}${pad(endDate.getDate())}T${pad(endDate.getHours())}${pad(endDate.getMinutes())}00`;
+  const params = new URLSearchParams({ action: 'TEMPLATE', text: title, dates: `${start}/${end}`, details: description || '', ctz: 'America/Bogota' });
+  return `https://calendar.google.com/calendar/render?${params.toString()}`;
+};

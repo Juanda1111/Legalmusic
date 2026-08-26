@@ -130,6 +130,128 @@ export function initContractsViewEvents(action) {
     }
 }
 
+function getPaymentConfig(frequency = '') {
+    const config = {
+        unico: {
+            fields: [
+                { key: 'paymentDate', label: 'Fecha de pago', type: 'date', required: true }
+            ],
+            helper: 'Se genera un único pago con la fecha indicada.'
+        },
+        diario: {
+            fields: [
+                { key: 'startDate', label: 'Fecha inicio', type: 'date', required: true },
+                { key: 'endDate', label: 'Fecha fin', type: 'date', required: true },
+                { key: 'installmentValue', label: 'Valor por día', type: 'number', required: true, min: 0 }
+            ],
+            helper: 'El sistema generará pagos diarios con este valor.'
+        },
+        semanal: {
+            fields: [
+                { key: 'startDate', label: 'Fecha inicio', type: 'date', required: true },
+                { key: 'endDate', label: 'Fecha fin', type: 'date', required: true },
+                { key: 'installmentValue', label: 'Valor por semana', type: 'number', required: true, min: 0 }
+            ],
+            helper: 'El sistema generará pagos semanales.'
+        },
+        quincenal: {
+            fields: [
+                { key: 'startDate', label: 'Fecha inicio', type: 'date', required: true },
+                { key: 'endDate', label: 'Fecha fin', type: 'date', required: true },
+                { key: 'installmentValue', label: 'Valor por quincena', type: 'number', required: true, min: 0 }
+            ],
+            helper: 'El sistema generará pagos quincenales.'
+        },
+        mensual: {
+            fields: [
+                { key: 'startDate', label: 'Fecha inicio', type: 'date', required: true },
+                { key: 'endDate', label: 'Fecha fin', type: 'date', required: true },
+                { key: 'installmentValue', label: 'Valor por mes', type: 'number', required: true, min: 0 },
+                { key: 'paymentDay', label: 'Día del mes', type: 'number', required: true, min: 1, max: 31 }
+            ],
+            helper: 'El calendario se repetirá cada mes en ese día.'
+        },
+        trimestral: {
+            fields: [
+                { key: 'startDate', label: 'Fecha inicio', type: 'date', required: true },
+                { key: 'endDate', label: 'Fecha fin', type: 'date', required: true },
+                { key: 'installmentValue', label: 'Valor por trimestre', type: 'number', required: true, min: 0 },
+                { key: 'paymentDay', label: 'Día del mes', type: 'number', required: true, min: 1, max: 31 }
+            ],
+            helper: 'El calendario se repetirá cada 3 meses en ese día.'
+        },
+        semestral: {
+            fields: [
+                { key: 'startDate', label: 'Fecha inicio', type: 'date', required: true },
+                { key: 'endDate', label: 'Fecha fin', type: 'date', required: true },
+                { key: 'installmentValue', label: 'Valor por semestre', type: 'number', required: true, min: 0 },
+                { key: 'paymentDay', label: 'Día del mes', type: 'number', required: true, min: 1, max: 31 }
+            ],
+            helper: 'El calendario se repetirá cada 6 meses en ese día.'
+        },
+        anual: {
+            fields: [
+                { key: 'startDate', label: 'Fecha inicio', type: 'date', required: true },
+                { key: 'endDate', label: 'Fecha fin', type: 'date', required: true },
+                { key: 'installmentValue', label: 'Valor por año', type: 'number', required: true, min: 0 },
+                { key: 'paymentDay', label: 'Día del mes', type: 'number', required: true, min: 1, max: 31 }
+            ],
+            helper: 'El calendario se repetirá cada año en ese día.'
+        },
+        personalizado: {
+            fields: [
+                { key: 'startDate', label: 'Fecha inicio', type: 'date', required: true },
+                { key: 'endDate', label: 'Fecha fin', type: 'date', required: true },
+                { key: 'installmentValue', label: 'Valor por cada X días', type: 'number', required: true, min: 0 },
+                { key: 'customDays', label: 'Cada cuántos días', type: 'number', required: true, min: 1 }
+            ],
+            helper: 'Usa esta opción cuando el intervalo no sea fijo por semana o mes.'
+        }
+    };
+
+    return config[frequency] || { fields: [], helper: '' };
+}
+
+function renderPaymentDynamicFields(contract = {}) {
+    const frequency = contract.paymentFrequency || '';
+    const config = getPaymentConfig(frequency);
+
+    if (!config.fields.length) {
+        return `
+            <div class="form-group">
+                <label class="form-label">Calendario de pagos</label>
+                <p class="muted">Selecciona una modalidad para configurar el pago.</p>
+            </div>
+        `;
+    }
+
+    return `
+        <div class="payment-dynamic-block">
+            <div class="form-group">
+                <label class="form-label">Calendario de pagos</label>
+                <small class="muted">${config.helper}</small>
+            </div>
+            ${config.fields.map(field => {
+                const value = contract[field.key] ?? '';
+                return `
+                    <div class="form-group">
+                        <label class="form-label">${field.label}</label>
+                        <input
+                            type="${field.type}"
+                            class="form-control"
+                            name="${field.key}"
+                            value="${value}"
+                            ${field.required ? 'required' : ''}
+                            ${field.min !== undefined ? `min="${field.min}"` : ''}
+                            ${field.max !== undefined ? `max="${field.max}"` : ''}
+                        >
+                    </div>
+                `;
+            }).join('')}
+        </div>
+    `;
+}
+
 function renderContractForm(contract = {}) {
     return `
         <form id="contractForm" class="standard-form">
@@ -191,29 +313,8 @@ function renderContractForm(contract = {}) {
                     <option value="personalizado" ${contract.paymentFrequency === 'personalizado' ? 'selected' : ''}>Personalizado</option>
                 </select>
             </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label class="form-label">Valor de cuota</label>
-                    <input type="number" class="form-control" name="installmentValue" value="${contract.installmentValue || ''}">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Día de pago</label>
-                    <input type="number" class="form-control" name="paymentDay" min="1" max="31" value="${contract.paymentDay || ''}">
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Días personalizados</label>
-                <input type="number" class="form-control" name="customDays" min="1" value="${contract.customDays || ''}">
-            </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label class="form-label">Fecha inicio</label>
-                    <input type="date" class="form-control" name="startDate" value="${contract.startDate || ''}" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Fecha fin</label>
-                    <input type="date" class="form-control" name="endDate" value="${contract.endDate || ''}" required>
-                </div>
+            <div id="paymentFieldsWrapper">
+                ${renderPaymentDynamicFields(contract)}
             </div>
             <div class="form-group">
                 <label class="form-label">Estado</label>
@@ -240,6 +341,27 @@ function renderContractForm(contract = {}) {
             <button type="submit" class="btn btn--primary btn--block">Guardar Contrato</button>
         </form>
     `;
+}
+
+function bindDynamicPaymentFields() {
+    const form = document.getElementById('contractForm');
+    if (!form) return;
+
+    const frequencySelect = form.elements['paymentFrequency'];
+    const paymentFieldsWrapper = document.getElementById('paymentFieldsWrapper');
+    if (!frequencySelect || !paymentFieldsWrapper) return;
+
+    const refreshPaymentFields = () => {
+        const formData = new FormData(form);
+        const currentValues = Object.fromEntries(formData.entries());
+        paymentFieldsWrapper.innerHTML = renderPaymentDynamicFields({
+            ...currentValues,
+            paymentFrequency: frequencySelect.value
+        });
+    };
+
+    frequencySelect.addEventListener('change', refreshPaymentFields);
+    refreshPaymentFields();
 }
 
 function bindContractFormEvents() {
@@ -273,6 +395,8 @@ function bindContractFormEvents() {
             showToast({ message: 'Plantilla guardada para futuros contratos', type: 'success' });
         });
 
+        bindDynamicPaymentFields();
+
         form.addEventListener('submit', (e) => {
             e.preventDefault();
             const formData = new FormData(form);
@@ -281,6 +405,9 @@ function bindContractFormEvents() {
             if (contractData.installmentValue) contractData.installmentValue = parseFloat(contractData.installmentValue);
             if (contractData.paymentDay) contractData.paymentDay = parseInt(contractData.paymentDay, 10);
             if (contractData.customDays) contractData.customDays = parseInt(contractData.customDays, 10);
+            if (contractData.paymentDate) contractData.paymentDate = contractData.paymentDate;
+            if (contractData.startDate) contractData.startDate = contractData.startDate;
+            if (contractData.endDate) contractData.endDate = contractData.endDate;
             
             if (contractData.id) {
                 const existingContract = store.getState().contracts.find(contract => String(contract.id) === contractData.id);

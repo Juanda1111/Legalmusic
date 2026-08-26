@@ -5,8 +5,7 @@ import { openModal, closeModal, openConfirmDialog, openBottomSheet } from '../co
 import { showToast } from '../components/toast.js';
 import { navigate } from '../router.js';
 import { renderWhatsAppMenuButton, initWhatsAppMenus } from '../components/notifications/WhatsAppMenuButton.js';
-import { renderCalendarButton, initCalendarButtons } from '../components/notifications/CalendarButton.js';
-import { REMINDER_OPTIONS_EVENTOS } from '../utils/notifications/reminders.js';
+import { buildCalendarLink } from '../utils/notifications/calendar.js';
 import { EVENT_TEMPLATES } from '../utils/formTemplates.js';
 import { renderEmptyState } from '../components/emptyState.js';
 
@@ -156,12 +155,10 @@ function showEventDetail(event) {
             ` : ''}
 
                         <div class="notification-event-actions">
-                                                            ${renderCalendarButton({ title: `Evento - ${event.name}`, description: `${event.venue} · Presentación de ${event.artist || event.name}`, date: event.date, time: event.showTime, reminderOptions: REMINDER_OPTIONS_EVENTOS, label: 'Agregar evento al calendario' })}
-                            ${renderCalendarButton({ title: `Prueba de sonido - ${event.artist || event.name}`, description: event.venue, date: event.date, time: event.soundcheckTime, reminderOptions: REMINDER_OPTIONS_EVENTOS, label: 'Agregar prueba de sonido al calendario' })}
-                                                        ${renderWhatsAppMenuButton({ phone: event.telefono || contract?.telefono || contract?.phone, label: 'Elegir aviso para enviar por WhatsApp', options: [
-                                { label: 'Recordatorio de evento', templateKey: 'evento_recordatorio', templateData: { artista: event.artist || event.name, fecha: formatDate(event.date), lugar: event.venue, horaPruebaSonido: event.soundcheckTime, horaEvento: event.showTime } },
-                                { label: 'Prueba de sonido', templateKey: 'evento_prueba_sonido', templateData: { artista: event.artist || event.name, fecha: formatDate(event.date), lugar: event.venue, horaPruebaSonido: event.soundcheckTime } },
-                                { label: 'Hora de llegada', templateKey: 'evento_llegada', templateData: { artista: event.artist || event.name, fecha: formatDate(event.date), lugar: event.venue, horaLlegada: event.soundcheckTime } }
+                            ${renderWhatsAppMenuButton({ phone: event.telefono || contract?.telefono || contract?.phone, label: 'Elegir aviso para enviar por WhatsApp', options: [
+                                { label: 'Recordatorio de evento', templateKey: 'evento_recordatorio', templateData: { artista: event.artist || event.name, fecha: formatDate(event.date), lugar: event.venue, horaPruebaSonido: event.soundcheckTime, horaEvento: event.showTime, calendarLink: buildCalendarLink({ title: `Evento - ${event.name}`, description: `${event.venue} · Presentación de ${event.artist || event.name}`, date: event.date, time: event.showTime }) } },
+                                { label: 'Prueba de sonido', templateKey: 'evento_prueba_sonido', templateData: { artista: event.artist || event.name, fecha: formatDate(event.date), lugar: event.venue, horaPruebaSonido: event.soundcheckTime, calendarLink: buildCalendarLink({ title: `Prueba de sonido - ${event.artist || event.name}`, description: event.venue, date: event.date, time: event.soundcheckTime }) } },
+                                { label: 'Hora de llegada', templateKey: 'evento_llegada', templateData: { artista: event.artist || event.name, fecha: formatDate(event.date), lugar: event.venue, horaLlegada: event.soundcheckTime, calendarLink: buildCalendarLink({ title: `Llegada - ${event.artist || event.name}`, description: event.venue, date: event.date, time: event.soundcheckTime }) } }
                             ] })}
                         </div>
 
@@ -182,7 +179,6 @@ function showEventDetail(event) {
 
     const detail = document.querySelector('.event-detail-sheet');
     if (detail) {
-        initCalendarButtons(detail);
         initWhatsAppMenus(detail);
     }
 

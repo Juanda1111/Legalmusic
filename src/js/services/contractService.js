@@ -15,12 +15,18 @@ class ContractService {
   }
 
   generatePaymentSchedule(contract) {
-    if (!contract.paymentFrequency || !contract.startDate || !contract.endDate) return [];
-
-    const start = this.parseDate(contract.startDate);
-    const end = this.parseDate(contract.endDate);
-    const amount = Number(contract.installmentValue || contract.amount || 0);
     const frequency = contract.paymentFrequency;
+    if (!frequency) return [];
+
+    const isSinglePayment = frequency === 'unico';
+    const startDate = isSinglePayment ? (contract.paymentDate || contract.startDate) : contract.startDate;
+    const endDate = isSinglePayment ? (contract.paymentDate || contract.endDate || contract.startDate) : contract.endDate;
+
+    if (!startDate || (!isSinglePayment && !endDate)) return [];
+
+    const start = this.parseDate(startDate);
+    const end = this.parseDate(endDate);
+    const amount = Number(contract.installmentValue || contract.amount || 0);
     const schedule = [];
     let current = start;
     let index = 1;

@@ -5,9 +5,8 @@ import { openModal, closeModal, openBottomSheet } from '../components/modal.js';
 import { showToast } from '../components/toast.js';
 import { navigate } from '../router.js';
 import { renderWhatsAppButton, initWhatsAppButtons } from '../components/notifications/WhatsAppButton.js';
-import { renderCalendarButton, initCalendarButtons } from '../components/notifications/CalendarButton.js';
 import { renderPaymentRow } from '../components/notifications/PaymentRow.js';
-import { REMINDER_OPTIONS_PAGOS } from '../utils/notifications/reminders.js';
+import { buildCalendarLink } from '../utils/notifications/calendar.js';
 
 export function renderContractDetailView(contractId) {
   const state = store.getState();
@@ -93,7 +92,7 @@ export function renderContractDetailView(contractId) {
             </div>
 
             <div class="notification-actions">
-              ${renderWhatsAppButton({ phone: contract.telefono || contract.phone, templateKey: 'pago_recordatorio', templateData: { nombreCliente: contract.clientName || contract.client || 'Cliente', valor: formatCurrency(nextPayment?.amount || 0), fecha: nextPayment ? formatDate(nextPayment.dueDate) : 'la fecha indicada' }, label: 'Enviar recordatorio de pago por WhatsApp' })}
+              ${renderWhatsAppButton({ phone: contract.telefono || contract.phone, templateKey: 'pago_recordatorio', templateData: { nombreCliente: contract.clientName || contract.client || 'Cliente', valor: formatCurrency(nextPayment?.amount || 0), fecha: nextPayment ? formatDate(nextPayment.dueDate) : 'la fecha indicada', calendarLink: nextPayment ? buildCalendarLink({ title: `Pago - ${nextPayment.concept}`, description: `Pago de ${contract.title}`, date: nextPayment.dueDate }) : '' }, label: 'Enviar recordatorio de pago por WhatsApp' })}
             </div>
 
             <div style="margin-bottom: 8px;">
@@ -139,7 +138,6 @@ export function initContractDetailViewEvents(contractId) {
   if (!container) return;
 
   initWhatsAppButtons(container);
-  initCalendarButtons(container);
 
   container.addEventListener('click', (e) => {
     // Registrar pago
