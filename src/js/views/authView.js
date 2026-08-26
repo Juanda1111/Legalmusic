@@ -10,7 +10,7 @@ export function renderAuthView() {
     return `
         <div class="auth-container">
             <div class="auth-logo">
-                ${icon('music')}
+                <img src="/logo.png" alt="LegalMusic Logo" class="auth-logo-img" />
                 <h1>LegalMusic</h1>
                 <p>Gestión de Estudios Musicales</p>
             </div>

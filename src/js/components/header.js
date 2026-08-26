@@ -28,7 +28,8 @@ export const renderHeader = (user, notificationCount, currentView) => {
           </button>
         ` : ''}
         <button class="header__brand" id="btnBrandDashboard" aria-label="Ir al inicio">
-          <span>LegalMusic</span> ${icon('music', 18)}
+          <span>LegalMusic</span>
+          <img src="/logo.png" alt="LegalMusic Logo" class="brand-logo" />
         </button>
         ${pageContext ? `
           <span class="header__context">

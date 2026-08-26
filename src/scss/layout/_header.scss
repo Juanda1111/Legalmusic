@@ -66,8 +66,10 @@
     margin-left: vars.$space-xs;
   }
 
-  svg {
-    color: vars.$primary;
+  .brand-logo {
+    height: 32px;
+    width: auto;
+    object-fit: contain;
   }
 }
 
