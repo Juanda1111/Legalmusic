@@ -5,6 +5,7 @@ export const STORAGE_KEYS = {
   EVENTS: 'lm_events',
   RIDERS: 'lm_riders',
   PAYMENTS: 'lm_payments',
+  CONTRACT_TEMPLATES: 'lm_contract_templates',
   NOTIFICATIONS: 'lm_notifications',
   SEED_DONE: 'lm_seed_done'
 };

@@ -14,6 +14,18 @@
   
   .form-control {
     @include mix.input-base;
+    color: vars.$text-primary !important;
+    caret-color: vars.$primary-light;
+
+    &::placeholder {
+      color: vars.$text-secondary;
+      opacity: 1;
+    }
+
+    &:-webkit-autofill {
+      -webkit-text-fill-color: vars.$text-primary;
+      box-shadow: 0 0 0 1000px vars.$surface-elevated inset;
+    }
   }
 
   .form-select {
@@ -38,6 +50,26 @@
     font-size: vars.$font-xs;
     margin-top: vars.$space-xs;
   }
+}
+
+.standard-form input,
+.standard-form textarea,
+.standard-form select {
+  color: vars.$text-primary !important;
+  background-color: vars.$surface-elevated;
+}
+
+.standard-form select option {
+  color: vars.$text-primary;
+  background-color: vars.$surface-elevated;
+}
+
+.standard-form input:focus-visible,
+.standard-form textarea:focus-visible,
+.standard-form select:focus-visible,
+.standard-form button:focus-visible {
+  outline: 2px solid vars.$primary-light;
+  outline-offset: 2px;
 }
 
 .form-row {

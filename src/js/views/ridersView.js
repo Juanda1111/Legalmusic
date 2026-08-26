@@ -4,6 +4,7 @@ import { formatDate } from '../utils/formatters.js';
 import { openModal, closeModal } from '../components/modal.js';
 import { showToast } from '../components/toast.js';
 import { navigate } from '../router.js';
+import { RIDER_TEMPLATES } from '../utils/formTemplates.js';
 
 export function renderRidersView() {
   const state = store.getState();
@@ -212,6 +213,19 @@ function openRiderModal(eventId) {
 
   const modalHtml = `
     <form id="riderForm" class="standard-form">
+      <div class="template-picker">
+        <div>
+          <strong>Plantilla rápida</strong>
+          <span>Rellena el rider según el formato</span>
+        </div>
+        <select class="form-control form-select" id="riderTemplate">
+          <option value="">Elegir plantilla</option>
+          <option value="banda">Banda en vivo</option>
+          <option value="dj">DJ</option>
+          <option value="acustico">Formato acústico</option>
+        </select>
+        <button type="button" class="btn btn--sm btn--secondary" id="applyRiderTemplate">Aplicar plantilla</button>
+      </div>
       <div class="form-group">
         <label class="form-label">PA</label>
         <textarea class="form-control form-textarea" name="pa">${rider.pa}</textarea>
@@ -253,6 +267,16 @@ function openRiderModal(eventId) {
 
   // Setup modal events
   let micCount = rider.microphones ? rider.microphones.length : 0;
+
+  document.getElementById('applyRiderTemplate').addEventListener('click', () => {
+    const template = RIDER_TEMPLATES[document.getElementById('riderTemplate').value];
+    if (!template) return;
+    ['pa', 'monitoring', 'backline', 'production', 'stageNotes'].forEach(name => {
+      document.querySelector(`#riderForm [name="${name}"]`).value = template[name];
+    });
+    document.getElementById('micList').innerHTML = template.microphones.map((mic, index) => getMicRowHtml(mic, index)).join('');
+    micCount = template.microphones.length;
+  });
   
   // Agregar micrófono
   document.getElementById('addMicBtn').addEventListener('click', () => {

@@ -55,6 +55,7 @@
   .modal-body {
     padding: vars.$space-lg;
     overflow-y: auto;
+    overscroll-behavior: contain;
     @include mix.scrollbar-hidden;
   }
 

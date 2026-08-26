@@ -5,6 +5,8 @@ import { openModal, closeModal, openConfirmDialog, openBottomSheet } from '../co
 import { showToast } from '../components/toast.js';
 import { contractService } from '../services/contractService.js';
 import { navigate } from '../router.js';
+import { CONTRACT_TEMPLATES } from '../utils/formTemplates.js';
+import { getSavedContractTemplates, saveContractTemplate } from '../utils/templateStorage.js';
 
 let currentFilter = 'Todos';
 const FILTERS = ['Todos', 'Borrador', 'Firmado', 'En Ejecución', 'Completado', 'Cancelado'];
@@ -133,6 +135,22 @@ function renderContractForm(contract = {}) {
     return `
         <form id="contractForm" class="standard-form">
             <input type="hidden" name="id" value="${contract.id || ''}">
+            <div class="template-picker">
+                <div>
+                    <strong>Plantilla rápida</strong>
+                    <span>Agiliza tus contratos guardando siempre el mismo orden y configuración.</span>
+                </div>
+                <select class="form-control form-select" id="contractTemplate">
+                    <option value="">Elegir plantilla</option>
+                    <optgroup label="Plantillas base">
+                        <option value="base-grabacion">Contrato de grabación</option>
+                        <option value="base-evento">Contrato para evento</option>
+                        <option value="base-produccion">Contrato de producción musical</option>
+                    </optgroup>
+                    ${getSavedContractTemplates().map(template => `<option value="saved-${template.id}">${template.name}</option>`).join('')}
+                </select>
+                <button type="button" class="btn btn--secondary btn--sm" id="applyContractTemplate">Aplicar plantilla</button>
+            </div>
             <div class="form-group">
                 <label class="form-label">Título</label>
                 <input type="text" class="form-control" name="title" value="${contract.title || ''}" required>
@@ -212,6 +230,14 @@ function renderContractForm(contract = {}) {
                 <label class="form-label">Descripción</label>
                 <textarea class="form-control form-textarea" name="description" required>${contract.description || ''}</textarea>
             </div>
+            <div class="template-save">
+                <div>
+                    <strong>Guardar esta configuración</strong>
+                    <span>Podrás reutilizarla en tus próximos contratos.</span>
+                </div>
+                <input type="text" class="form-control" id="contractTemplateName" placeholder="Nombre de plantilla" maxlength="40">
+                <button type="button" class="btn btn--ghost btn--sm" id="saveContractTemplate">Guardar plantilla</button>
+            </div>
             <button type="submit" class="btn btn--primary btn--block">Guardar Contrato</button>
         </form>
     `;
@@ -220,6 +246,34 @@ function renderContractForm(contract = {}) {
 function bindContractFormEvents() {
     const form = document.getElementById('contractForm');
     if (form) {
+        document.getElementById('applyContractTemplate')?.addEventListener('click', () => {
+            const selected = document.getElementById('contractTemplate')?.value || '';
+            const baseKey = selected.replace('base-', '');
+            const baseTemplate = CONTRACT_TEMPLATES[baseKey];
+            const savedTemplate = getSavedContractTemplates().find(template => `saved-${template.id}` === selected);
+            const template = baseTemplate || savedTemplate?.data;
+            if (!template) return;
+            Object.entries(template).forEach(([name, value]) => {
+                const field = form.elements[name];
+                if (field && value !== '') field.value = value;
+            });
+            ['clientName', 'telefono', 'amount', 'startDate', 'endDate'].forEach(name => {
+                if (!baseTemplate) return;
+                const field = form.elements[name];
+                if (field) field.value = '';
+            });
+        });
+
+        document.getElementById('saveContractTemplate')?.addEventListener('click', () => {
+            const name = document.getElementById('contractTemplateName')?.value;
+            if (!name?.trim()) return;
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+            ['id', 'clientName', 'telefono', 'amount', 'startDate', 'endDate', 'status'].forEach(field => delete data[field]);
+            saveContractTemplate(name.trim(), data);
+            showToast({ message: 'Plantilla guardada para futuros contratos', type: 'success' });
+        });
+
         form.addEventListener('submit', (e) => {
             e.preventDefault();
             const formData = new FormData(form);

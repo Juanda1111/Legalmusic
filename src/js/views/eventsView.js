@@ -7,6 +7,7 @@ import { navigate } from '../router.js';
 import { renderWhatsAppMenuButton, initWhatsAppMenus } from '../components/notifications/WhatsAppMenuButton.js';
 import { renderCalendarButton, initCalendarButtons } from '../components/notifications/CalendarButton.js';
 import { REMINDER_OPTIONS_EVENTOS } from '../utils/notifications/reminders.js';
+import { EVENT_TEMPLATES } from '../utils/formTemplates.js';
 
 export function renderEventsView() {
     const state = store.getState();
@@ -213,6 +214,19 @@ function renderEventForm(event = {}, contracts = []) {
     return `
         <form id="eventForm" class="standard-form">
             <input type="hidden" name="id" value="${event.id || ''}">
+            <div class="template-picker">
+                <div>
+                    <strong>Plantilla rápida</strong>
+                    <span>Rellena horarios y datos habituales</span>
+                </div>
+                <select class="form-control form-select" id="eventTemplate">
+                    <option value="">Elegir plantilla</option>
+                    <option value="concierto">Concierto</option>
+                    <option value="lanzamiento">Lanzamiento de álbum</option>
+                    <option value="showcase">Showcase privado</option>
+                </select>
+                <button type="button" class="btn btn--secondary btn--sm" id="applyEventTemplate">Aplicar plantilla</button>
+            </div>
             <div class="form-group">
                 <label class="form-label">Nombre del Evento</label>
                 <input type="text" class="form-control" name="name" value="${event.name || ''}" required>
@@ -281,6 +295,14 @@ function renderEventForm(event = {}, contracts = []) {
 function bindEventFormEvents() {
     const form = document.getElementById('eventForm');
     if (form) {
+        document.getElementById('applyEventTemplate')?.addEventListener('click', () => {
+            const template = EVENT_TEMPLATES[document.getElementById('eventTemplate')?.value];
+            if (!template) return;
+            Object.entries(template).forEach(([name, value]) => {
+                const field = form.elements[name];
+                if (field && value !== '') field.value = value;
+            });
+        });
         form.addEventListener('submit', (e) => {
             e.preventDefault();
             const formData = new FormData(form);
