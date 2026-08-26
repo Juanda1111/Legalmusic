@@ -90,6 +90,14 @@ class Store {
     this.setState('events', events);
     setItem(STORAGE_KEYS.EVENTS, events);
   }
+
+  saveRider(rider) {
+    const riders = this.state.riders.some(item => item.id === rider.id)
+      ? this.state.riders.map(item => item.id === rider.id ? rider : item)
+      : [...this.state.riders, rider];
+    this.setState('riders', riders);
+    setItem(STORAGE_KEYS.RIDERS, riders);
+  }
   
   addPayment(payment) {
     const payments = [...this.state.payments, payment];

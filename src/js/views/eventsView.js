@@ -9,6 +9,7 @@ export function renderEventsView() {
     const state = store.getState();
     const events = state.events || [];
     const contracts = state.contracts || [];
+    const riders = state.riders || [];
 
     // Ordenar eventos por fecha ascendente
     const sortedEvents = [...events].sort((a, b) => new Date(a.date) - new Date(b.date));
@@ -29,13 +30,13 @@ export function renderEventsView() {
             </header>
 
             <div class="event-list" id="eventListContainer">
-                ${renderEventList(sortedEvents, contracts)}
+                ${renderEventList(sortedEvents, contracts, riders)}
             </div>
         </div>
     `;
 }
 
-function renderEventList(events, contracts) {
+function renderEventList(events, contracts, riders) {
     if (events.length === 0) {
         return `
             <div class="empty-state">
@@ -47,6 +48,7 @@ function renderEventList(events, contracts) {
 
     return events.map(e => {
         const contract = contracts.find(c => String(c.id) === String(e.contractId));
+        const hasRider = riders.some(rider => String(rider.eventId) === String(e.id));
         return `
             <div class="compact-card compact-card--highlight status-${e.status} event-card" data-id="${e.id}">
                 <div class="compact-card__header">
@@ -68,7 +70,7 @@ function renderEventList(events, contracts) {
                 </div>
                 <div class="compact-card__footer">
                     <span class="badge badge--type">${e.capacity} px</span>
-                    ${e.hasRider ? `
+                    ${hasRider ? `
                         <button class="btn btn--ghost btn--sm btn-ver-rider" data-id="${e.id}" style="padding:0;height:auto;min-height:0;color:var(--primary);">
                             ${icon('headphones', 14)} Ver Rider
                         </button>

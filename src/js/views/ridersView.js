@@ -8,9 +8,11 @@ import { navigate } from '../router.js';
 export function renderRidersView() {
   const state = store.getState();
   const events = state.events || [];
+  const riders = state.riders || [];
 
-  const eventsWithRiders = events.filter(e => e.rider);
-  const eventsWithoutRiders = events.filter(e => !e.rider);
+  const getRider = event => riders.find(rider => String(rider.eventId) === String(event.id));
+  const eventsWithRiders = events.filter(event => getRider(event));
+  const eventsWithoutRiders = events.filter(event => !getRider(event));
 
   let html = `
     <div class="riders-view">
@@ -37,7 +39,7 @@ export function renderRidersView() {
   } else {
     // 1. List events that DO have riders
     eventsWithRiders.forEach(event => {
-      const rider = event.rider;
+      const rider = getRider(event);
       html += `
         <div class="card mb-4" data-event-id="${event.id}">
           <div class="card-header" style="align-items:center;">
@@ -63,7 +65,7 @@ export function renderRidersView() {
               </div>
               <div class="rider-category__content" style="display: none; padding:12px 0 0 26px;">
                 <p style="margin-bottom:8px;"><strong>PA:</strong> <span style="color:var(--text-secondary)">${rider.pa || 'No especificado'}</span></p>
-                <p><strong>Monitoreo:</strong> <span style="color:var(--text-secondary)">${rider.monitors || 'No especificado'}</span></p>
+                <p><strong>Monitoreo:</strong> <span style="color:var(--text-secondary)">${rider.monitoring || rider.monitors || 'No especificado'}</span></p>
               </div>
             </div>
 
@@ -85,7 +87,7 @@ export function renderRidersView() {
                           <span style="font-weight:600">${mic.name}</span>
                         </div>
                         <div style="font-size:0.75rem;color:var(--text-secondary);text-align:right;">
-                          <p>Cant: ${mic.quantity}</p>
+                          <p>Cant: ${mic.quantity ?? mic.qty}</p>
                           <p>Uso: ${mic.use}</p>
                         </div>
                       </div>
@@ -130,7 +132,7 @@ export function renderRidersView() {
                 ${icon('chevronDown', 18)}
               </div>
               <div class="rider-category__content" style="display: none; padding:12px 0 0 26px; color:var(--text-secondary);">
-                <p>${rider.notes || 'Sin notas adicionales.'}</p>
+                <p>${rider.notes || rider.stageNotes || 'Sin notas adicionales.'}</p>
               </div>
             </div>
 
@@ -197,7 +199,7 @@ export function initRidersViewEvents() {
 
     if (editBtn || createBtn) {
       const btn = editBtn || createBtn;
-      const eventId = parseInt(btn.dataset.eventId, 10);
+      const eventId = btn.dataset.eventId;
       openRiderModal(eventId);
     }
   });
@@ -205,16 +207,16 @@ export function initRidersViewEvents() {
 
 function openRiderModal(eventId) {
   const state = store.getState();
-  const event = state.events.find(e => e.id === eventId);
+  const event = state.events.find(e => String(e.id) === String(eventId));
   if (!event) return;
 
-  const rider = event.rider || {
+  const rider = state.riders.find(item => String(item.eventId) === String(event.id)) || {
     pa: '',
-    monitors: '',
+    monitoring: '',
     microphones: [],
     backline: '',
     production: '',
-    notes: ''
+    stageNotes: ''
   };
 
   let micsHtml = '';
@@ -233,7 +235,7 @@ function openRiderModal(eventId) {
       
       <div class="form-group">
         <label class="form-label">Monitoreo</label>
-        <textarea class="form-control form-textarea" name="monitors">${rider.monitors}</textarea>
+        <textarea class="form-control form-textarea" name="monitoring">${rider.monitoring || rider.monitors || ''}</textarea>
       </div>
       
       <div class="form-group">
@@ -248,7 +250,7 @@ function openRiderModal(eventId) {
       
       <div class="form-group">
         <label class="form-label">Notas de Escenario</label>
-        <textarea class="form-control form-textarea" name="notes">${rider.notes}</textarea>
+        <textarea class="form-control form-textarea" name="stageNotes">${rider.notes || rider.stageNotes || ''}</textarea>
       </div>
 
       <div class="form-group">
@@ -299,20 +301,20 @@ function openRiderModal(eventId) {
     });
 
     const updatedRider = {
+      id: rider.id || `r-${Date.now()}`,
+      eventId: event.id,
       pa: formData.get('pa'),
-      monitors: formData.get('monitors'),
+      monitoring: formData.get('monitoring'),
       backline: formData.get('backline'),
       production: formData.get('production'),
-      notes: formData.get('notes'),
+      stageNotes: formData.get('stageNotes'),
       microphones: mics
     };
 
-    store.updateEvent(event.id, { rider: updatedRider, hasRider: true });
+    store.saveRider(updatedRider);
     showToast({ message: 'Rider guardado exitosamente', type: 'success' });
     closeModal();
-    // Re-render views
-    document.getElementById('app').innerHTML = renderRidersView();
-    initRidersViewEvents();
+    setTimeout(() => navigate('riders'), 300);
   });
 }
 
