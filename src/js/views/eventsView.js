@@ -46,7 +46,7 @@ function renderEventList(events, contracts) {
     }
 
     return events.map(e => {
-        const contract = contracts.find(c => c.id === parseInt(e.contractId));
+        const contract = contracts.find(c => String(c.id) === String(e.contractId));
         return `
             <div class="compact-card compact-card--highlight status-${e.status} event-card" data-id="${e.id}">
                 <div class="compact-card__header">
@@ -110,8 +110,8 @@ export function initEventsViewEvents() {
         // Detalle de evento
         const card = e.target.closest('.event-card');
         if (card) {
-            const id = parseInt(card.dataset.id, 10);
-            const event = store.getState().events.find(ev => ev.id === id);
+            const id = card.dataset.id;
+            const event = store.getState().events.find(ev => String(ev.id) === id);
             if (event) {
                 showEventDetail(event);
             }
@@ -121,7 +121,7 @@ export function initEventsViewEvents() {
 
 function showEventDetail(event) {
     const state = store.getState();
-    const contract = state.contracts.find(c => c.id === parseInt(event.contractId));
+    const contract = state.contracts.find(c => String(c.id) === String(event.contractId));
 
     const html = `
         <div class="event-detail-sheet">
@@ -183,7 +183,8 @@ function showEventDetail(event) {
     document.getElementById('btnDeleteEvent')?.addEventListener('click', () => {
         openConfirmDialog('¿Estás seguro de eliminar este evento?', () => {
             closeModal();
-            showToast({ message: 'Evento eliminado (Demo)', type: 'success' });
+            store.deleteEvent(event.id);
+            showToast({ message: 'Evento eliminado', type: 'success' });
             
             // Re-render safe list
             const listContainer = document.getElementById('eventListContainer');
@@ -240,6 +241,7 @@ function renderEventForm(event = {}, contracts = []) {
             <div class="form-group">
                 <label class="form-label">Estado</label>
                 <select class="form-control form-select" name="status" required>
+                    <option value="programado" ${event.status === 'programado' ? 'selected' : ''}>Programado</option>
                     <option value="planeado" ${event.status === 'planeado' ? 'selected' : ''}>Planeado</option>
                     <option value="confirmado" ${event.status === 'confirmado' ? 'selected' : ''}>Confirmado</option>
                     <option value="en_curso" ${event.status === 'en_curso' ? 'selected' : ''}>En Curso</option>
@@ -266,8 +268,10 @@ function bindEventFormEvents() {
             eventData.capacity = parseInt(eventData.capacity, 10);
             
             if (eventData.id) {
-                eventData.id = parseInt(eventData.id, 10);
-                store.updateEvent(eventData.id, eventData);
+                const existingEvent = store.getState().events.find(event => String(event.id) === eventData.id);
+                if (!existingEvent) return;
+                eventData.id = existingEvent.id;
+                store.updateEvent(existingEvent.id, eventData);
                 showToast({ message: 'Evento actualizado', type: 'success' });
             } else {
                 eventData.id = Date.now();

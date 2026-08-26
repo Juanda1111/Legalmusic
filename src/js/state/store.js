@@ -84,6 +84,12 @@ class Store {
     this.setState('events', events);
     setItem(STORAGE_KEYS.EVENTS, events);
   }
+
+  deleteEvent(id) {
+    const events = this.state.events.filter(e => e.id !== id);
+    this.setState('events', events);
+    setItem(STORAGE_KEYS.EVENTS, events);
+  }
   
   addPayment(payment) {
     const payments = [...this.state.payments, payment];
