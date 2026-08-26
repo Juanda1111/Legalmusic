@@ -56,7 +56,7 @@ export function initNotificationsViewEvents() {
 
   container.addEventListener('click', (event) => {
     if (event.target.closest('.notification-item')) {
-      navigate('payments');
+      navigate('payments', event.target.closest('.notification-item').dataset.paymentId);
     }
   });
 }

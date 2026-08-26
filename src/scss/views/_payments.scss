@@ -2,6 +2,20 @@
 @use '../abstracts/mixins' as mix;
 
 .payments-view {
+  .flex { display: flex; }
+  .flex-col { flex-direction: column; }
+  .justify-between { justify-content: space-between; }
+  .items-start { align-items: flex-start; }
+  .items-end { align-items: flex-end; }
+  .gap-2 { gap: vars.$space-sm; }
+  .mb-2 { margin-bottom: vars.$space-sm; }
+  .mb-3 { margin-bottom: vars.$space-md; }
+  .mb-4 { margin-bottom: vars.$space-xl; }
+  .mt-1 { margin-top: vars.$space-xs; }
+  .text-gray { color: vars.$text-secondary; }
+  .text-xs { font-size: vars.$font-xs; }
+  .text-sm { font-size: vars.$font-sm; }
+
   .payments-summary {
     @include mix.card-base;
     background: linear-gradient(135deg, vars.$surface-elevated 0%, vars.$surface 100%);

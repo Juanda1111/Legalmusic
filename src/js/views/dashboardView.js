@@ -1,6 +1,6 @@
 import { icon } from '../components/icons.js';
 import { store } from '../state/store.js';
-import { formatCurrency, formatDate, getStatusLabel, getStatusClass } from '../utils/formatters.js';
+import { formatCurrency, formatDate, parseDate, getStatusLabel, getStatusClass } from '../utils/formatters.js';
 import { openBottomSheet, closeModal } from '../components/modal.js';
 import { navigate } from '../router.js';
 import { authService } from '../services/authService.js';
@@ -19,14 +19,14 @@ export function renderDashboardView() {
     const next30Days = new Date();
     next30Days.setDate(now.getDate() + 30);
     const upcomingEvents = events.filter(e => {
-        const eDate = new Date(e.date);
+        const eDate = parseDate(e.date);
         return eDate >= now && eDate <= next30Days;
     });
 
     const pendingAmount = payments
         .filter(p => p.status === 'pendiente')
         .reduce((acc, p) => acc + p.amount, 0);
-    const overduePayments = payments.filter(p => p.status === 'atrasado' || (p.status === 'pendiente' && new Date(p.dueDate) < now));
+    const overduePayments = payments.filter(p => p.status === 'atrasado' || (p.status === 'pendiente' && parseDate(p.dueDate) < now));
     const overdueAmount = overduePayments.reduce((acc, p) => acc + p.amount, 0);
 
     // Próximos eventos (máximo 3)

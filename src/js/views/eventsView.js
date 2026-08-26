@@ -199,7 +199,8 @@ function showEventDetail(event) {
             if (listContainer) {
                 const events = store.getState().events || [];
                 const contracts = store.getState().contracts || [];
-                listContainer.innerHTML = renderEventList(events, contracts);
+                const riders = store.getState().riders || [];
+                listContainer.innerHTML = renderEventList(events, contracts, riders);
             }
         });
     });
@@ -295,7 +296,8 @@ function bindEventFormEvents() {
                 const contracts = store.getState().contracts || [];
                 // Sort array 
                 events.sort((a, b) => new Date(a.date) - new Date(b.date));
-                listContainer.innerHTML = renderEventList(events, contracts);
+                const riders = store.getState().riders || [];
+                listContainer.innerHTML = renderEventList(events, contracts, riders);
             }
         });
     }

@@ -35,4 +35,34 @@
     background-color: vars.$surface-elevated;
     color: vars.$text-secondary;
   }
+
+  &--type {
+    background-color: rgba(vars.$primary-light, 0.14);
+    color: vars.$primary-light;
+  }
+
+  &--status-neutral {
+    background-color: vars.$surface-elevated;
+    color: vars.$text-secondary;
+  }
+
+  &--status-primary, &--status-info {
+    background-color: rgba(vars.$primary, 0.2);
+    color: vars.$primary-light;
+  }
+
+  &--status-success {
+    background-color: rgba(vars.$success, 0.2);
+    color: vars.$success;
+  }
+
+  &--status-warning {
+    background-color: rgba(vars.$warning, 0.2);
+    color: vars.$warning;
+  }
+
+  &--status-danger {
+    background-color: rgba(vars.$danger, 0.2);
+    color: vars.$danger;
+  }
 }

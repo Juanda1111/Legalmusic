@@ -147,7 +147,7 @@ export function initContractDetailViewEvents(contractId) {
     // Registrar pago
     const btnPayment = e.target.closest('#btnMarkPaid');
     if (btnPayment) {
-      const pid = parseInt(btnPayment.dataset.id, 10);
+      const pid = btnPayment.dataset.id;
       const amount = btnPayment.dataset.amount;
       openConfirmDialog('Registrar Pago', `¿Confirmar recepción de ${formatCurrency(amount)}?`, () => {
         store.updatePayment(pid, { status: 'pagado', paidDate: new Date().toISOString().split('T')[0] });
@@ -160,7 +160,7 @@ export function initContractDetailViewEvents(contractId) {
     // Cambiar estado del contrato
     const btnStatus = e.target.closest('#btnChangeStatus');
     if (btnStatus) {
-      const id = parseInt(btnStatus.dataset.id, 10);
+      const id = btnStatus.dataset.id;
       openBottomSheet({
         title: 'Cambiar Estado',
         content: `

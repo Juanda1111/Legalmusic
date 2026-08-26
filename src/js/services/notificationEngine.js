@@ -1,3 +1,5 @@
+import { parseDate } from '../utils/formatters.js';
+
 class NotificationEngine {
   constructor() {
     this.notifications = [];
@@ -11,9 +13,7 @@ class NotificationEngine {
     this.notifications = [];
 
     payments.filter(p => p.status === 'pendiente' || p.status === 'atrasado').forEach(payment => {
-      const dueDate = new Date(payment.dueDate);
-      // Ajustar timezone local si es necesario para evitar desfases
-      const due = new Date(dueDate.getFullYear(), dueDate.getMonth(), dueDate.getDate() + 1);
+      const due = parseDate(payment.dueDate);
       
       const diffTime = due - today;
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));

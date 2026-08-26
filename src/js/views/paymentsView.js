@@ -1,6 +1,6 @@
 import { icon } from '../components/icons.js';
 import { store } from '../state/store.js';
-import { formatCurrency, formatDate, formatRelativeDate, getStatusLabel, getStatusClass } from '../utils/formatters.js';
+import { formatCurrency, formatDate, formatRelativeDate, parseDate, getStatusLabel, getStatusClass } from '../utils/formatters.js';
 import { openConfirmDialog } from '../components/modal.js';
 import { showToast } from '../components/toast.js';
 import { navigate } from '../router.js';
@@ -17,7 +17,16 @@ export function renderPaymentsView(action) {
 
   const pending = payments.filter(p => p.status === 'pendiente');
   const paid = payments.filter(p => p.status === 'pagado');
-  const overdue = payments.filter(p => p.status === 'atrasado' || (p.status === 'pendiente' && new Date(p.dueDate) < new Date()));
+  const overdue = payments.filter(p => p.status === 'atrasado' || (p.status === 'pendiente' && parseDate(p.dueDate) < new Date()));
+
+  const selectedPayment = payments.find(payment => String(payment.id) === String(action));
+  if (selectedPayment) {
+    currentTab = selectedPayment.status === 'pagado'
+      ? 'pagados'
+      : overdue.some(payment => String(payment.id) === String(selectedPayment.id))
+        ? 'atrasados'
+        : 'pendientes';
+  }
 
   const totalPending = pending.reduce((sum, p) => sum + Number(p.amount), 0);
   const totalPaid = paid.reduce((sum, p) => sum + Number(p.amount), 0);
@@ -86,7 +95,7 @@ export function renderPaymentsView(action) {
   } else {
     listToShow.forEach(payment => {
       const contract = contracts.find(c => c.id === payment.contractId) || {};
-      const statusClass = payment.status === 'atrasado' || new Date(payment.dueDate) < new Date() && payment.status !== 'pagado' ? 'danger' :
+      const statusClass = payment.status === 'atrasado' || parseDate(payment.dueDate) < new Date() && payment.status !== 'pagado' ? 'danger' :
                           payment.status === 'pagado' ? 'success' : 'warning';
       
       html += `

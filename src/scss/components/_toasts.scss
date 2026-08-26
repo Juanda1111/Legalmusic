@@ -25,34 +25,42 @@
   border-left: 4px solid transparent;
   animation: toast-enter vars.$transition-base;
   
-  .icon {
-    font-size: vars.$font-xl;
+  .toast-icon {
+    display: inline-flex;
+    color: vars.$text-secondary;
   }
   
-  .text {
+  .toast-message {
     flex: 1;
     font-size: vars.$font-sm;
     font-weight: vars.$weight-medium;
   }
+
+  .toast-close {
+    @include mix.touch-target;
+    width: 28px;
+    min-height: 28px;
+    color: vars.$text-secondary;
+  }
   
   &--success {
     border-left-color: vars.$success;
-    .icon { color: vars.$success; }
+    .toast-icon { color: vars.$success; }
   }
   
   &--warning {
     border-left-color: vars.$warning;
-    .icon { color: vars.$warning; }
+    .toast-icon { color: vars.$warning; }
   }
   
   &--danger {
     border-left-color: vars.$danger;
-    .icon { color: vars.$danger; }
+    .toast-icon { color: vars.$danger; }
   }
   
   &--info {
     border-left-color: vars.$primary;
-    .icon { color: vars.$primary-light; }
+    .toast-icon { color: vars.$primary-light; }
   }
 }
 

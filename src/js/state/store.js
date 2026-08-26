@@ -68,7 +68,7 @@ class Store {
   }
 
   updateContract(id, updates) {
-    const contracts = this.state.contracts.map(c => c.id === id ? { ...c, ...updates } : c);
+    const contracts = this.state.contracts.map(c => String(c.id) === String(id) ? { ...c, ...updates } : c);
     this.setState('contracts', contracts);
     setItem(STORAGE_KEYS.CONTRACTS, contracts);
   }
@@ -80,20 +80,20 @@ class Store {
   }
   
   updateEvent(id, updates) {
-    const events = this.state.events.map(e => e.id === id ? { ...e, ...updates } : e);
+    const events = this.state.events.map(e => String(e.id) === String(id) ? { ...e, ...updates } : e);
     this.setState('events', events);
     setItem(STORAGE_KEYS.EVENTS, events);
   }
 
   deleteEvent(id) {
-    const events = this.state.events.filter(e => e.id !== id);
+    const events = this.state.events.filter(e => String(e.id) !== String(id));
     this.setState('events', events);
     setItem(STORAGE_KEYS.EVENTS, events);
   }
 
   saveRider(rider) {
-    const riders = this.state.riders.some(item => item.id === rider.id)
-      ? this.state.riders.map(item => item.id === rider.id ? rider : item)
+    const riders = this.state.riders.some(item => String(item.id) === String(rider.id))
+      ? this.state.riders.map(item => String(item.id) === String(rider.id) ? rider : item)
       : [...this.state.riders, rider];
     this.setState('riders', riders);
     setItem(STORAGE_KEYS.RIDERS, riders);
@@ -106,7 +106,7 @@ class Store {
   }
   
   updatePayment(id, updates) {
-    const payments = this.state.payments.map(p => p.id === id ? { ...p, ...updates } : p);
+    const payments = this.state.payments.map(p => String(p.id) === String(id) ? { ...p, ...updates } : p);
     this.setState('payments', payments);
     setItem(STORAGE_KEYS.PAYMENTS, payments);
   }

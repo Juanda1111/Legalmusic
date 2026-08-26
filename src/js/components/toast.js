@@ -35,7 +35,7 @@ export const showToast = (options) => {
     </button>
   `;
   
-  const toastEl = createElement('div', { className: `toast toast-${type}` });
+  const toastEl = createElement('div', { className: `toast toast--${type}` });
   toastEl.innerHTML = toastHTML;
   
   container.appendChild(toastEl);

@@ -322,7 +322,7 @@ function getMicRowHtml(mic, index) {
   return `
     <div class="rider-mic-row" data-index="${index}" style="display:flex; gap:8px; align-items:center;">
       <input type="text" class="form-control" name="mic_name_${index}" placeholder="Micrófono" value="${mic.name}" style="flex:2" required>
-      <input type="number" class="form-control" name="mic_qty_${index}" placeholder="Cant." value="${mic.quantity}" style="flex:1" required>
+      <input type="number" class="form-control" name="mic_qty_${index}" placeholder="Cant." value="${mic.quantity ?? mic.qty ?? 1}" style="flex:1" required>
       <input type="text" class="form-control" name="mic_use_${index}" placeholder="Uso (Ej. Voz)" value="${mic.use}" style="flex:2" required>
       <button type="button" class="btn btn--danger btn-remove-mic" style="padding:0;width:36px;height:36px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
         ${icon('trash', 16)}

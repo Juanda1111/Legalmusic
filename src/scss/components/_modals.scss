@@ -76,6 +76,8 @@
 
 .bottom-sheet {
   align-self: flex-end;
+  width: min(100%, 520px);
+  max-width: none;
   border-radius: vars.$radius-xl vars.$radius-xl 0 0;
   margin-bottom: 0;
   padding-bottom: env(safe-area-inset-bottom);
