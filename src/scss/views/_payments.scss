@@ -16,13 +16,23 @@
   .text-xs { font-size: vars.$font-xs; }
   .text-sm { font-size: vars.$font-sm; }
 
+  .payments-heading {
+    margin-bottom: vars.$space-xl;
+
+    p {
+      margin-top: vars.$space-xs;
+      color: vars.$text-secondary;
+      font-size: vars.$font-sm;
+    }
+  }
+
   .payments-summary {
     @include mix.card-base;
     background: linear-gradient(135deg, vars.$surface-elevated 0%, vars.$surface 100%);
     border: 1px solid rgba(vars.$primary, 0.3);
     margin-bottom: vars.$space-xl;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: vars.$space-sm;
 
     &__item {
@@ -30,7 +40,10 @@
       text-align: center;
 
       span {
-        display: block;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: vars.$space-xs;
         font-size: vars.$font-xs;
         margin-bottom: vars.$space-xs;
       }
@@ -42,19 +55,82 @@
         overflow-wrap: anywhere;
       }
 
+      small {
+        display: block;
+        margin-top: 2px;
+        color: vars.$text-secondary;
+        font-size: 10px;
+      }
+
       &:not(:last-child) {
         border-right: 1px solid vars.$border;
       }
     }
   }
 
+  .summary-dot,
+  .payment-card__status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: vars.$radius-full;
+    display: inline-block;
+    flex: 0 0 auto;
+
+    &--warning { background: vars.$warning; }
+    &--success { background: vars.$success; }
+    &--danger { background: vars.$danger; }
+  }
+
   .notifications-section {
-    h3 {
+    padding: vars.$space-lg;
+    margin-bottom: vars.$space-2xl;
+    background: vars.$surface;
+    border: 1px solid vars.$border;
+    border-radius: vars.$radius-lg;
+
+    h2 {
       display: flex;
       align-items: center;
       gap: vars.$space-sm;
       font-size: vars.$font-base;
+      margin-top: 2px;
     }
+  }
+
+  .section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: vars.$space-md;
+    margin-bottom: vars.$space-md;
+  }
+
+  .section-kicker {
+    display: block;
+    color: vars.$primary-light;
+    font-size: 10px;
+    font-weight: vars.$weight-bold;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .section-heading h2 {
+    margin-top: 2px;
+    font-size: vars.$font-lg;
+  }
+
+  .section-count {
+    min-width: 28px;
+    padding: 4px 8px;
+    border: 1px solid vars.$border;
+    border-radius: vars.$radius-full;
+    color: vars.$text-secondary;
+    font-size: vars.$font-xs;
+    text-align: center;
+  }
+
+  .payments-workspace {
+    min-width: 0;
   }
 
   .notification-list {
@@ -126,14 +202,103 @@
   }
 
   .payment-card {
+    padding: vars.$space-lg;
+    margin-bottom: vars.$space-md;
+    background: vars.$surface;
+    border: 1px solid vars.$border;
     border-left: 4px solid vars.$warning;
+    border-radius: vars.$radius-md;
 
     &--danger { border-left-color: vars.$danger; }
     &--success { border-left-color: vars.$success; }
 
-    h4 {
-      margin-top: vars.$space-xs;
+    &__topline {
+      display: flex;
+      align-items: center;
+      gap: vars.$space-xs;
+      padding-bottom: vars.$space-sm;
+      border-bottom: 1px solid vars.$border;
+    }
+
+    &__status-dot { background: vars.$warning; }
+    &--danger .payment-card__status-dot { background: vars.$danger; }
+    &--success .payment-card__status-dot { background: vars.$success; }
+
+    &__status-label {
+      color: vars.$text-secondary;
+      font-size: vars.$font-xs;
+      font-weight: vars.$weight-semibold;
+    }
+
+    &__date {
+      margin-left: auto;
+      color: vars.$text-secondary;
+      font-size: vars.$font-xs;
+    }
+
+    &__content {
+      display: flex;
+      justify-content: space-between;
+      gap: vars.$space-lg;
+      padding: vars.$space-md 0;
+    }
+
+    &__info { min-width: 0; }
+
+    &__contract {
+      overflow: hidden;
+      color: vars.$text-secondary;
       font-size: vars.$font-base;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    h3 {
+      margin-top: vars.$space-xs;
+      font-size: vars.$font-lg;
+    }
+
+    &__client {
+      margin-top: 3px;
+      color: vars.$text-secondary;
+      font-size: vars.$font-sm;
+    }
+
+    &__meta {
+      display: flex;
+      align-items: center;
+      gap: vars.$space-xs;
+      margin-top: vars.$space-md;
+      color: vars.$text-secondary;
+      font-size: vars.$font-xs;
+    }
+
+    &__notes {
+      margin-top: vars.$space-sm;
+      color: vars.$text-secondary;
+      font-size: vars.$font-xs;
+      font-style: italic;
+    }
+
+    &__action {
+      display: flex;
+      flex: 0 0 145px;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: vars.$space-sm;
+    }
+
+    &__footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: vars.$space-sm;
+      padding-top: vars.$space-sm;
+      border-top: 1px dashed vars.$border;
+      color: vars.$text-secondary;
+      font-size: vars.$font-xs;
+
+      > div { display: flex; align-items: center; gap: vars.$space-sm; }
     }
 
     .payment-amount {
@@ -142,6 +307,23 @@
       font-weight: vars.$weight-bold;
       color: vars.$text-primary;
     }
+  }
+
+  @media (max-width: 520px) {
+    .payments-summary { padding: vars.$space-md vars.$space-sm; }
+
+    .payment-card {
+      &__content { flex-direction: column; gap: vars.$space-md; }
+      &__action { flex: auto; align-items: flex-start; }
+      &__action .payment-amount { order: -1; }
+      &__footer { align-items: flex-end; }
+    }
+  }
+
+  @media (min-width: 900px) {
+    .payments-summary { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .notifications-section { max-width: 820px; }
+    .payments-workspace { max-width: 980px; }
   }
 
   .payment-progress {

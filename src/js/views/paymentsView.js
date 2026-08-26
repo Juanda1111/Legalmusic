@@ -18,6 +18,7 @@ export function renderPaymentsView(action) {
   const pending = payments.filter(p => p.status === 'pendiente');
   const paid = payments.filter(p => p.status === 'pagado');
   const overdue = payments.filter(p => p.status === 'atrasado' || (p.status === 'pendiente' && isBeforeToday(p.dueDate)));
+  const upcoming = pending.filter(payment => !isBeforeToday(payment.dueDate));
 
   const selectedPayment = payments.find(payment => String(payment.id) === String(action));
   if (selectedPayment) {
@@ -33,44 +34,62 @@ export function renderPaymentsView(action) {
   const totalOverdue = overdue.reduce((sum, p) => sum + Number(p.amount), 0);
 
   // Default tab logic
-  if (currentTab === 'atrasados' && overdue.length === 0 && pending.length > 0) {
+  if (currentTab === 'atrasados' && overdue.length === 0 && upcoming.length > 0) {
     currentTab = 'pendientes';
   }
 
   let html = `
     <div class="payments-view">
-      <div class="view-header">
+      <header class="payments-heading">
         <h1 class="view-title">Pagos</h1>
-      </div>
+        <p>Controla lo recibido y lo que está por cobrar.</p>
+      </header>
 
-      <div class="payments-summary card mb-4">
+      <section class="payments-summary" aria-label="Resumen financiero">
         <div class="payments-summary__item">
-          <span class="text-warning">Por cobrar</span>
+          <span><span class="summary-dot summary-dot--warning"></span>Por cobrar</span>
           <h3>${formatCurrency(totalPending)}</h3>
+          <small>${pending.length} cuota${pending.length === 1 ? '' : 's'}</small>
         </div>
         <div class="payments-summary__item">
-          <span class="text-success">Cobrado</span>
+          <span><span class="summary-dot summary-dot--success"></span>Cobrado</span>
           <h3>${formatCurrency(totalPaid)}</h3>
+          <small>${paid.length} pago${paid.length === 1 ? '' : 's'}</small>
         </div>
         <div class="payments-summary__item">
-          <span class="text-danger">Atrasado</span>
+          <span><span class="summary-dot summary-dot--danger"></span>Atrasado</span>
           <h3>${formatCurrency(totalOverdue)}</h3>
+          <small>${overdue.length} cuota${overdue.length === 1 ? '' : 's'}</small>
         </div>
-      </div>
+      </section>
 
-      <section class="notifications-section mb-4">
-        <h3 class="mb-2">${icon('bell', 20)} Alertas Activas</h3>
+      <section class="notifications-section">
+        <div class="section-heading">
+          <div>
+            <span class="section-kicker">Seguimiento</span>
+            <h2>${icon('bell', 18)} Alertas activas</h2>
+          </div>
+          <span class="section-count">${notificationEngine.getNotificationCount()}</span>
+        </div>
         <div class="notification-list">
           ${renderNotifications()}
         </div>
       </section>
 
-      <div class="payment-tabs mb-4">
+      <section class="payments-workspace">
+        <div class="section-heading section-heading--list">
+          <div>
+            <span class="section-kicker">Detalle</span>
+            <h2>Calendario de pagos</h2>
+          </div>
+          <span class="section-count">${payments.length}</span>
+        </div>
+      <div class="payment-tabs" role="tablist" aria-label="Filtrar pagos">
         <button class="payment-tab ${currentTab === 'atrasados' ? 'active' : ''}" data-tab="atrasados">
           Atrasados <span class="badge badge--danger">${overdue.length}</span>
         </button>
         <button class="payment-tab ${currentTab === 'pendientes' ? 'active' : ''}" data-tab="pendientes">
-          Pendientes <span class="badge badge--warning">${pending.length}</span>
+          Pendientes <span class="badge badge--warning">${upcoming.length}</span>
         </button>
         <button class="payment-tab ${currentTab === 'pagados' ? 'active' : ''}" data-tab="pagados">
           Pagados <span class="badge badge--success">${paid.length}</span>
@@ -82,7 +101,7 @@ export function renderPaymentsView(action) {
 
   let listToShow = [];
   if (currentTab === 'atrasados') listToShow = overdue;
-  if (currentTab === 'pendientes') listToShow = pending;
+  if (currentTab === 'pendientes') listToShow = upcoming;
   if (currentTab === 'pagados') listToShow = paid;
 
   if (listToShow.length === 0) {
@@ -94,24 +113,36 @@ export function renderPaymentsView(action) {
     `;
   } else {
     listToShow.forEach(payment => {
-      const contract = contracts.find(c => c.id === payment.contractId) || {};
+      const contract = contracts.find(c => String(c.id) === String(payment.contractId)) || {};
       const statusClass = payment.status === 'atrasado' || isBeforeToday(payment.dueDate) && payment.status !== 'pagado' ? 'danger' :
                           payment.status === 'pagado' ? 'success' : 'warning';
       
       html += `
-        <div class="payment-card payment-card--${statusClass} card mb-3">
-          <div class="flex justify-between items-start">
-            <div>
-              <p class="text-sm text-gray">${contract.title || 'Contrato Desconocido'}</p>
-              <h4>${payment.concept}</h4>
-              <div class="payment-amount">${formatCurrency(payment.amount)}</div>
+        <article class="payment-card payment-card--${statusClass}">
+          <div class="payment-card__topline">
+            <span class="payment-card__status-dot"></span>
+            <span class="payment-card__status-label">${getStatusLabel(payment.status)}</span>
+            <span class="payment-card__date">${formatDate(payment.dueDate)}</span>
+          </div>
+          <div class="payment-card__content">
+            <div class="payment-card__info">
+              <p class="payment-card__contract">${contract.title || 'Contrato desconocido'}</p>
+              <h3>${payment.concept}</h3>
+              <p class="payment-card__client">${contract.clientName || contract.client || 'Cliente sin especificar'}</p>
               ${payment.status === 'pagado' 
-                ? `<p class="text-sm mt-1">${icon('check', 14)} Pagado el ${formatDate(payment.paidDate)}</p>` 
-                : `<p class="text-sm mt-1">${icon('clock', 14)} Vence: ${formatDate(payment.dueDate)} (${formatRelativeDate(payment.dueDate)})</p>`}
-              ${payment.notes ? `<p class="text-xs text-gray mt-1">${payment.notes}</p>` : ''}
+                ? `<p class="payment-card__meta">${icon('check', 14)} Pagado el ${formatDate(payment.paidDate)}</p>` 
+                : `<p class="payment-card__meta">${icon('clock', 14)} ${formatRelativeDate(payment.dueDate)}</p>`}
+              ${payment.notes ? `<p class="payment-card__notes">${payment.notes}</p>` : ''}
             </div>
-            <div class="flex flex-col items-end gap-2">
+            <div class="payment-card__action">
+              <strong class="payment-amount">${formatCurrency(payment.amount)}</strong>
               <span class="badge badge--${statusClass}">${getStatusLabel(payment.status)}</span>
+              ${contract.id ? `<button class="btn btn--ghost btn--sm btn-view-contract" data-contract-id="${contract.id}">Ver contrato</button>` : ''}
+            </div>
+          </div>
+          <div class="payment-card__footer">
+            <span>${payment.status === 'pagado' ? 'Pago registrado' : `Vence ${formatDate(payment.dueDate)}`}</span>
+            <div>
               ${payment.status !== 'pagado' ? `
                 <button class="btn btn--sm btn--success btn-register-payment" data-id="${payment.id}" data-amount="${payment.amount}" data-concept="${payment.concept}">
                   Registrar Pago
@@ -119,12 +150,12 @@ export function renderPaymentsView(action) {
               ` : ''}
             </div>
           </div>
-        </div>
+        </article>
       `;
     });
   }
 
-  html += `</div></div>`;
+  html += `</div></section></div>`;
   return html;
 }
 
@@ -165,6 +196,12 @@ export function initPaymentsViewEvents(action) {
   const listContainer = document.querySelector('.payments-list');
   if (listContainer) {
     listContainer.addEventListener('click', (e) => {
+      const contractButton = e.target.closest('.btn-view-contract');
+      if (contractButton) {
+        navigate('contract-detail', contractButton.dataset.contractId);
+        return;
+      }
+
       const btn = e.target.closest('.btn-register-payment');
       if (btn) {
         const id = btn.dataset.id;
