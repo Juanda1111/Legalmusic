@@ -11,6 +11,13 @@
 }
 
 @media (min-width: 900px) {
+  .events-view .page-header,
+  .events-view .event-list {
+    max-width: 1080px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
   .events-view .event-list {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));

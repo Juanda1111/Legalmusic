@@ -85,3 +85,13 @@
     display: flex;
   }
 }
+
+@media (min-width: 900px) {
+  .contracts-view .page-header,
+  .contracts-view .filter-bar,
+  .contracts-view .contract-list {
+    max-width: 1080px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}

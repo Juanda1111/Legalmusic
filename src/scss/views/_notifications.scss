@@ -68,7 +68,11 @@
 }
 
 @media (min-width: 900px) {
+  .notifications-view .page-header,
   .notifications-view .notifications-list {
+    max-width: 920px;
+    margin-left: auto;
+    margin-right: auto;
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

@@ -321,6 +321,15 @@
   }
 
   @media (min-width: 900px) {
+    .payments-heading,
+    .payments-summary,
+    .notifications-section,
+    .payments-workspace {
+      width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
     .payments-summary { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .notifications-section { max-width: 820px; }
     .payments-workspace { max-width: 980px; }
