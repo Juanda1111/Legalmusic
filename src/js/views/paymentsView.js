@@ -130,7 +130,7 @@ export function renderPaymentsView(action) {
               <h3>${payment.concept}</h3>
               <p class="payment-card__client">${contract.clientName || contract.client || 'Cliente sin especificar'}</p>
               ${payment.status === 'pagado' 
-                ? `<p class="payment-card__meta">${icon('check', 14)} Pagado el ${formatDate(payment.paidDate)}</p>` 
+                ? `<p class="payment-card__meta">${icon('check', 14)} Pagado el ${formatDate(payment.paidDate)}</p>`
                 : `<p class="payment-card__meta">${icon('clock', 14)} ${formatRelativeDate(payment.dueDate)}</p>`}
               ${payment.notes ? `<p class="payment-card__notes">${payment.notes}</p>` : ''}
             </div>
