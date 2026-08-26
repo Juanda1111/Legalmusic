@@ -1,0 +1,99 @@
+@use '../abstracts/variables' as vars;
+@use '../abstracts/mixins' as mix;
+
+.payments-view {
+  .payments-summary {
+    @include mix.card-base;
+    background: linear-gradient(135deg, vars.$surface-elevated 0%, vars.$surface 100%);
+    border: 1px solid rgba(vars.$primary, 0.3);
+    margin-bottom: vars.$space-xl;
+    text-align: center;
+    
+    .label {
+      font-size: vars.$font-sm;
+      color: vars.$text-secondary;
+      margin-bottom: vars.$space-xs;
+    }
+    
+    .total-amount {
+      font-size: vars.$font-3xl;
+      font-weight: vars.$weight-bold;
+      color: vars.$primary-light;
+      margin-bottom: vars.$space-lg;
+    }
+    
+    .stats-row {
+      display: flex;
+      border-top: 1px solid vars.$border;
+      padding-top: vars.$space-md;
+      
+      .stat {
+        flex: 1;
+        
+        &:first-child {
+          border-right: 1px solid vars.$border;
+        }
+        
+        .stat-val {
+          font-weight: vars.$weight-bold;
+          font-size: vars.$font-lg;
+          
+          &.success { color: vars.$success; }
+          &.warning { color: vars.$warning; }
+        }
+      }
+    }
+  }
+  
+  .payment-tabs {
+    display: flex;
+    background-color: vars.$surface-elevated;
+    border-radius: vars.$radius-md;
+    padding: 4px;
+    margin-bottom: vars.$space-lg;
+    
+    .tab {
+      flex: 1;
+      text-align: center;
+      padding: vars.$space-sm 0;
+      border-radius: vars.$radius-md;
+      font-size: vars.$font-sm;
+      font-weight: vars.$weight-medium;
+      color: vars.$text-secondary;
+      @include mix.touch-target;
+      min-height: 36px;
+      
+      &.active {
+        background-color: vars.$surface;
+        color: vars.$text-primary;
+        box-shadow: vars.$shadow-sm;
+      }
+    }
+  }
+  
+  .payment-card {
+    .amount-row {
+      @include mix.flex-between;
+      margin: vars.$space-sm 0;
+      
+      .amount {
+        font-size: vars.$font-xl;
+        font-weight: vars.$weight-bold;
+      }
+    }
+  }
+  
+  .payment-progress {
+    height: 6px;
+    background-color: vars.$surface-elevated;
+    border-radius: vars.$radius-full;
+    margin-top: vars.$space-md;
+    overflow: hidden;
+    
+    .bar {
+      height: 100%;
+      background-color: vars.$success;
+      border-radius: vars.$radius-full;
+    }
+  }
+}

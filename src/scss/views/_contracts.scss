@@ -1,0 +1,46 @@
+@use '../abstracts/variables' as vars;
+@use '../abstracts/mixins' as mix;
+
+.contracts-view {
+  // Barra de filtros
+  .filter-bar {
+    display: flex;
+    gap: vars.$space-sm;
+    overflow-x: auto;
+    @include mix.scrollbar-hidden;
+    margin-bottom: vars.$space-xl;
+    padding-bottom: 2px;
+    
+    .filter-pill {
+      flex: 0 0 auto;
+      padding: 8px 16px;
+      border-radius: vars.$radius-full;
+      background-color: vars.$surface-elevated;
+      border: 1px solid vars.$border;
+      font-size: vars.$font-sm;
+      font-weight: vars.$weight-medium;
+      color: vars.$text-secondary;
+      cursor: pointer;
+      transition: all vars.$transition-fast;
+      -webkit-tap-highlight-color: transparent;
+      
+      &.active {
+        background-color: vars.$primary;
+        color: #ffffff;
+        border-color: vars.$primary;
+      }
+
+      &:active:not(.active) {
+        background-color: vars.$surface;
+      }
+    }
+  }
+  
+  // Lista
+  .contract-list {
+    display: flex;
+    flex-direction: column;
+    gap: vars.$space-md;
+    padding-bottom: vars.$space-xl;
+  }
+}
