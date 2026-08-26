@@ -2,10 +2,10 @@ import { icon } from './icons.js';
 
 export const NAV_ITEMS = [
   { id: 'dashboard', label: 'Inicio', icon: 'home', view: 'dashboard' },
+  { id: 'payments', label: 'Pagos', icon: 'dollarSign', view: 'payments' },
   { id: 'contracts', label: 'Contratos', icon: 'fileText', view: 'contracts' },
   { id: 'events', label: 'Eventos', icon: 'calendar', view: 'events' },
-  { id: 'riders', label: 'Riders', icon: 'music', view: 'riders' },
-  { id: 'payments', label: 'Pagos', icon: 'dollarSign', view: 'payments' }
+  { id: 'riders', label: 'Riders', icon: 'music', view: 'riders' }
 ];
 
 export const renderBottomNav = (activeView) => {

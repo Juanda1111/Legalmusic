@@ -2,6 +2,10 @@
 @use '../abstracts/mixins' as mix;
 
 .contracts-view {
+  align-self: stretch;
+  margin-top: 0;
+  margin-bottom: 0;
+
   // Barra de filtros
   .filter-bar {
     display: flex;
