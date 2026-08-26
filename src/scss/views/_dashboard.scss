@@ -239,6 +239,50 @@
   margin-left: vars.$space-sm;
 }
 
+@media (min-width: 900px) {
+  .dashboard-view {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: vars.$space-lg;
+  }
+
+  .dash-greeting,
+  .dash-alert,
+  .dash-kpis {
+    grid-column: 1 / -1;
+    margin-bottom: 0;
+  }
+
+  .dash-greeting {
+    align-items: center;
+  }
+
+  .dash-greeting__name {
+    font-size: vars.$font-2xl;
+  }
+
+  .dash-kpis {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin-bottom: vars.$space-md;
+  }
+
+  .dash-kpi {
+    min-height: 92px;
+  }
+
+  .dash-section {
+    min-width: 0;
+    margin-bottom: 0;
+  }
+
+  .dash-section--events { grid-column: span 7; }
+  .dash-section--payments { grid-column: span 5; }
+
+  .fab {
+    right: max(32px, calc((100vw - 1280px) / 2));
+  }
+}
+
 @media (max-width: 360px) {
   .dash-kpis {
     gap: vars.$space-sm;

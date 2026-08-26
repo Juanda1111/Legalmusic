@@ -67,3 +67,27 @@
   line-height: 1;
   letter-spacing: 0.2px;
 }
+
+@media (min-width: 900px) {
+  .bottom-nav {
+    left: 50%;
+    right: auto;
+    bottom: 20px;
+    width: min(760px, calc(100% - 48px));
+    height: 68px;
+    transform: translateX(-50%);
+    border: 1px solid vars.$border;
+    border-radius: vars.$radius-lg;
+    box-shadow: vars.$shadow-md;
+    overflow: hidden;
+  }
+
+  .nav-item {
+    gap: 5px;
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+}

@@ -48,3 +48,21 @@
     }
   }
 }
+
+@media (min-width: 900px) {
+  .riders-view .riders-container {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: vars.$space-lg;
+    align-items: start;
+  }
+
+  .riders-view .riders-container > .card {
+    margin-bottom: 0;
+  }
+
+  .riders-view .riders-container > h3,
+  .riders-view .riders-container > h3 + div {
+    grid-column: 1 / -1;
+  }
+}

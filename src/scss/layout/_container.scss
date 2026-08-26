@@ -10,3 +10,13 @@
   overflow-x: hidden;
   min-height: 100vh;
 }
+
+@media (min-width: 900px) {
+  .main-content {
+    width: min(100%, 1280px);
+    margin: 0 auto;
+    padding-left: vars.$space-2xl;
+    padding-right: vars.$space-2xl;
+    padding-bottom: 112px;
+  }
+}

@@ -94,7 +94,7 @@ export function renderDashboardView() {
             </div>
 
             <!-- Próximos eventos -->
-            <section class="dash-section">
+            <section class="dash-section dash-section--events">
                 <h3 class="dash-section__title">Próximos Eventos</h3>
                 ${next3Events.length === 0
                     ? '<p class="dash-section__empty">No hay eventos próximos</p>'
@@ -112,7 +112,7 @@ export function renderDashboardView() {
 
             <!-- Actividad reciente -->
             ${last3Paid.length > 0 ? `
-            <section class="dash-section">
+            <section class="dash-section dash-section--payments">
                 <h3 class="dash-section__title">Pagos Recientes</h3>
                 ${last3Paid.map(p => {
                     const contract = contracts.find(c => c.id === p.contractId);
