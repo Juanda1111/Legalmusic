@@ -137,7 +137,7 @@ export function renderDashboardView() {
 export function initDashboardViewEvents() {
     const btnVerPagos = document.getElementById('btnVerPagosAtrasados');
     if (btnVerPagos) {
-        btnVerPagos.addEventListener('click', () => navigate('payments'));
+        btnVerPagos.addEventListener('click', () => navigate('payments', 'overdue'));
     }
 
     const fab = document.getElementById('dashboardFab');
@@ -159,11 +159,11 @@ export function initDashboardViewEvents() {
 
             document.getElementById('btnNewContract')?.addEventListener('click', () => {
                 closeModal();
-                navigate('contracts');
+                setTimeout(() => navigate('contracts', 'new'), 300);
             });
             document.getElementById('btnNewEvent')?.addEventListener('click', () => {
                 closeModal();
-                navigate('events');
+                setTimeout(() => navigate('events', 'new'), 300);
             });
         });
     }

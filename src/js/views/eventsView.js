@@ -81,7 +81,7 @@ function renderEventList(events, contracts, riders) {
     }).join('');
 }
 
-export function initEventsViewEvents() {
+export function initEventsViewEvents(action) {
     const container = document.querySelector('.events-view');
     if (!container) return;
 
@@ -119,6 +119,12 @@ export function initEventsViewEvents() {
             }
         }
     });
+
+    if (action === 'new') {
+        const contracts = store.getState().contracts || [];
+        openModal('Nuevo Evento', renderEventForm({}, contracts));
+        bindEventFormEvents();
+    }
 }
 
 function showEventDetail(event) {

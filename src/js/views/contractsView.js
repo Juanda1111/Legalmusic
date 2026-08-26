@@ -93,7 +93,7 @@ function renderContractList() {
     `).join('');
 }
 
-export function initContractsViewEvents() {
+export function initContractsViewEvents(action) {
     const container = document.querySelector('.contracts-view');
     if (!container) return;
 
@@ -133,6 +133,11 @@ export function initContractsViewEvents() {
             }
         }
     });
+
+    if (action === 'new') {
+        openModal('Nuevo Contrato', renderContractForm());
+        bindContractFormEvents();
+    }
 }
 
 function renderContractForm(contract = {}) {

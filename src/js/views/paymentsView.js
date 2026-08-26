@@ -8,7 +8,9 @@ import { notificationEngine } from '../services/notificationEngine.js';
 
 let currentTab = 'atrasados';
 
-export function renderPaymentsView() {
+export function renderPaymentsView(action) {
+  if (action === 'overdue') currentTab = 'atrasados';
+
   const state = store.getState();
   const payments = state.payments || [];
   const contracts = state.contracts || [];
@@ -138,7 +140,8 @@ function renderNotifications() {
   }).join('');
 }
 
-export function initPaymentsViewEvents() {
+export function initPaymentsViewEvents(action) {
+  if (action === 'overdue') currentTab = 'atrasados';
   const container = document.querySelector('.payment-tabs');
   if (container) {
     container.addEventListener('click', (e) => {
