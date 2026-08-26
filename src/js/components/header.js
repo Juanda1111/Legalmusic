@@ -53,7 +53,13 @@ export const renderHeader = (user, notificationCount, currentView) => {
 export const initHeaderEvents = () => {
   const btnBack = document.querySelector('.header__back');
   if (btnBack) {
-    btnBack.addEventListener('click', () => navigate(btnBack.dataset.backView));
+    btnBack.addEventListener('click', () => {
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        navigate('dashboard');
+      }
+    });
   }
 
   const btnBrand = document.getElementById('btnBrandDashboard');

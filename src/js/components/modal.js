@@ -76,7 +76,14 @@ export const openModal = (options, legacyContent) => {
   const closeBtn = modalWrapper.querySelector('.modal-close-btn');
   const overlay = modalWrapper.querySelector('.modal-overlay');
 
+  const canCloseForm = () => {
+    const form = modalWrapper.querySelector('form');
+    if (!form) return true;
+    return window.confirm('¿Seguro que quieres salir? Debes terminar de completar el formulario. Se perderán los datos ingresados.');
+  };
+
   const handleClose = () => {
+    if (!canCloseForm()) return;
     if (typeof onClose === 'function') onClose();
     closeModal();
   };

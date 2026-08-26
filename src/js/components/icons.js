@@ -13,6 +13,7 @@ const icons = {
   check: '<polyline points="20 6 9 17 4 12"></polyline>',
   x: '<line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>',
   chevronRight: '<polyline points="9 18 15 12 9 6"></polyline>',
+  chevronLeft: '<polyline points="15 18 9 12 15 6"></polyline>',
   chevronDown: '<polyline points="6 9 12 15 18 9"></polyline>',
   filter: '<polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>',
   search: '<circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>',

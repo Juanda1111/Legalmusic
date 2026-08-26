@@ -25,7 +25,7 @@
   border-radius: vars.$radius-lg;
   width: 100%;
   max-width: 412px;
-  max-height: 85vh;
+  max-height: min(85vh, calc(100dvh - 24px));
   display: flex;
   flex-direction: column;
   box-shadow: vars.$shadow-md;
@@ -58,6 +58,10 @@
     @include mix.scrollbar-hidden;
   }
 
+  .standard-form {
+    min-width: 0;
+  }
+
   .modal-footer {
     padding: vars.$space-lg;
     border-top: 1px solid vars.$border;
@@ -67,6 +71,26 @@
     .btn {
       flex: 1;
     }
+  }
+}
+
+@media (max-width: 520px) {
+  .modal-wrapper {
+    align-items: flex-end;
+    padding: 12px;
+  }
+
+  .modal-container {
+    max-height: calc(100dvh - 24px);
+
+    .modal-body {
+      padding: vars.$space-md;
+    }
+  }
+
+  .standard-form .form-row {
+    flex-direction: column;
+    gap: 0;
   }
 }
 
