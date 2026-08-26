@@ -175,12 +175,14 @@ function renderNotifications() {
 export function initPaymentsViewEvents(action) {
   if (action === 'overdue') currentTab = 'atrasados';
 
-  requestAnimationFrame(() => {
-    const calendarSection = document.querySelector('.payments-workspace');
-    if (calendarSection) {
-      calendarSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  });
+  if (action === 'overdue') {
+    requestAnimationFrame(() => {
+      const calendarSection = document.querySelector('.payments-workspace');
+      if (calendarSection) {
+        calendarSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  }
 
   const container = document.querySelector('.payment-tabs');
   if (container) {
