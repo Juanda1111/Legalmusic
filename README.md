@@ -28,7 +28,7 @@ El proyecto fue construido priorizando el rendimiento, prescindiendo de framewor
 
 Para el despliegue del entorno de desarrollo es necesario contar con:
 
-- Node.js (versión >= 18.0.0, se recomienda la última versión LTS).
+- Node.js (versión >= 20.19.0, se recomienda la última versión LTS).
 - Gestor de paquetes npm (incluido en la instalación de Node.js).
 
 ---
